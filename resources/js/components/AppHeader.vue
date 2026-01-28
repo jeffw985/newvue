@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import type { InertiaLinkProps } from '@inertiajs/vue3';
 import { Link, usePage } from '@inertiajs/vue3';
 import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-vue-next';
 import { computed } from 'vue';
+
 import AppLogo from '@/components/AppLogo.vue';
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
@@ -32,15 +34,15 @@ import {
     TooltipTrigger,
 } from '@/components/ui/tooltip';
 import UserMenuContent from '@/components/UserMenuContent.vue';
-import { useCurrentUrl } from '@/composables/useCurrentUrl';
+import { useActiveUrl } from '@/composables/useActiveUrl';
 import { getInitials } from '@/composables/useInitials';
 import { toUrl } from '@/lib/utils';
 import { dashboard } from '@/routes';
 import type { BreadcrumbItem, NavItem } from '@/types';
 
-type Props = {
+interface Props {
     breadcrumbs?: BreadcrumbItem[];
-};
+}
 
 const props = withDefaults(defineProps<Props>(), {
     breadcrumbs: () => [],
@@ -48,10 +50,13 @@ const props = withDefaults(defineProps<Props>(), {
 
 const page = usePage();
 const auth = computed(() => page.props.auth);
-const { isCurrentUrl, whenCurrentUrl } = useCurrentUrl();
+const { urlIsActive } = useActiveUrl();
 
-const activeItemStyles =
-    'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100';
+function activeItemStyles(url: NonNullable<InertiaLinkProps['href']>) {
+    return urlIsActive(url)
+        ? 'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100'
+        : '';
+}
 
 const mainNavItems: NavItem[] = [
     {
@@ -109,12 +114,7 @@ const rightNavItems: NavItem[] = [
                                         :key="item.title"
                                         :href="item.href"
                                         class="flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent"
-                                        :class="
-                                            whenCurrentUrl(
-                                                item.href,
-                                                activeItemStyles,
-                                            )
-                                        "
+                                        :class="activeItemStyles(item.href)"
                                     >
                                         <component
                                             v-if="item.icon"
@@ -164,10 +164,7 @@ const rightNavItems: NavItem[] = [
                                 <Link
                                     :class="[
                                         navigationMenuTriggerStyle(),
-                                        whenCurrentUrl(
-                                            item.href,
-                                            activeItemStyles,
-                                        ),
+                                        activeItemStyles(item.href),
                                         'h-9 cursor-pointer px-3',
                                     ]"
                                     :href="item.href"
@@ -180,7 +177,7 @@ const rightNavItems: NavItem[] = [
                                     {{ item.title }}
                                 </Link>
                                 <div
-                                    v-if="isCurrentUrl(item.href)"
+                                    v-if="urlIsActive(item.href)"
                                     class="absolute bottom-0 left-0 h-0.5 w-full translate-y-px bg-black dark:bg-white"
                                 ></div>
                             </NavigationMenuItem>

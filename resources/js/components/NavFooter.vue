@@ -9,10 +9,10 @@ import {
 import { toUrl } from '@/lib/utils';
 import { type NavItem } from '@/types';
 
-type Props = {
+interface Props {
     items: NavItem[];
     class?: string;
-};
+}
 
 defineProps<Props>();
 </script>

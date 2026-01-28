@@ -5,9 +5,9 @@ defineOptions({
     inheritAttrs: false,
 });
 
-type Props = {
+interface Props {
     className?: HTMLAttributes['class'];
-};
+}
 
 defineProps<Props>();
 </script>

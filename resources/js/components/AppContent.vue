@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+
 import { SidebarInset } from '@/components/ui/sidebar';
 
-type Props = {
+interface Props {
     variant?: 'header' | 'sidebar';
     class?: string;
-};
+}
 
 const props = defineProps<Props>();
 const className = computed(() => props.class);

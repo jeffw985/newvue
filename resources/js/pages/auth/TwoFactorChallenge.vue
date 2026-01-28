@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Form, Head } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
+
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,15 +12,20 @@ import {
 } from '@/components/ui/input-otp';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import { store } from '@/routes/two-factor/login';
-import type { TwoFactorConfigContent } from '@/types';
 
-const authConfigContent = computed<TwoFactorConfigContent>(() => {
+interface AuthConfigContent {
+    title: string;
+    description: string;
+    toggleText: string;
+}
+
+const authConfigContent = computed<AuthConfigContent>(() => {
     if (showRecoveryInput.value) {
         return {
             title: 'Recovery Code',
             description:
                 'Please confirm access to your account by entering one of your emergency recovery codes.',
-            buttonText: 'login using an authentication code',
+            toggleText: 'login using an authentication code',
         };
     }
 
@@ -27,7 +33,7 @@ const authConfigContent = computed<TwoFactorConfigContent>(() => {
         title: 'Authentication Code',
         description:
             'Enter the authentication code provided by your authenticator application.',
-        buttonText: 'login using a recovery code',
+        toggleText: 'login using a recovery code',
     };
 });
 
@@ -91,7 +97,7 @@ const code = ref<string>('');
                             class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
                             @click="() => toggleRecoveryMode(clearErrors)"
                         >
-                            {{ authConfigContent.buttonText }}
+                            {{ authConfigContent.toggleText }}
                         </button>
                     </div>
                 </Form>
@@ -123,7 +129,7 @@ const code = ref<string>('');
                             class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
                             @click="() => toggleRecoveryMode(clearErrors)"
                         >
-                            {{ authConfigContent.buttonText }}
+                            {{ authConfigContent.toggleText }}
                         </button>
                     </div>
                 </Form>
