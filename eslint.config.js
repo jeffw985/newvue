@@ -10,10 +10,15 @@ export default defineConfigWithVueTs(
         ignores: ['vendor', 'node_modules', 'public', 'bootstrap/ssr', 'tailwind.config.js', 'vite.config.ts', 'resources/js/components/ui/*'],
     },
     {
-        // Add languageOptions to fix the Parsing Error for .d.ts files
+        // Add languageOptions to handle files outside of the main tsconfig.json
         languageOptions: {
             parserOptions: {
-                projectService: true,
+                projectService: {
+                    allowDefaultProject: [
+                        'eslint.config.js',
+                        'resources/js/types/index.d.ts'
+                    ],
+                },
                 tsconfigRootDir: import.meta.dirname,
             },
         },
