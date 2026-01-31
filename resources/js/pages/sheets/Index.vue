@@ -102,10 +102,10 @@ const formatDateRange = (beginDate: string, endDate: string) => {
                         <div class="flex items-start justify-between">
                             <div class="space-y-1 flex-1">
                                 <div class="flex items-center gap-2">
-                                    <span class="font-medium">Sheet ID.  {{ sheet.id }}</span>
+                                    <span class="font-small">Sheet ID.  {{ sheet.id }}</span>
                                 </div>
                                 <div class="flex items-center gap-2">
-                                    <Badge variant="outline-amber" class="text-sm">
+                                    <Badge variant="outline-green" class="text-xs">
                                         {{ formatDateRange(sheet.begin_date, sheet.end_date) }}
                                     </Badge>
                                     <Badge
@@ -124,7 +124,7 @@ const formatDateRange = (beginDate: string, endDate: string) => {
                                         class="text-primary hover:underline"
                                         @click.stop
                                     >
-                                        View Sheets
+                                        View Sheet Set
                                     </a>
                                 </div>
                             </div>
