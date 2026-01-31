@@ -178,8 +178,13 @@ const selectTab = (tab: 'customer' | 'ledgers' | 'irrigations' | 'maintenances' 
 
         <!-- Tab Content -->
         <div v-if="activeTab === 'customer'">
-            <div class="rounded-md border bg-muted/20 p-6 text-center text-sm text-muted-foreground">
-                Customer details are displayed in the main panel
+            <div class="rounded-md border p-3">
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="font-medium text-sm">{{ customer.full_name || 'No name' }}</span>
+                        <span class="text-[10px] text-muted-foreground">ID: {{ customer.id }}</span>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -198,20 +203,23 @@ const selectTab = (tab: 'customer' | 'ledgers' | 'irrigations' | 'maintenances' 
                     @click="emit('recordSelected', 'ledger', { ...ledger, customer })"
                 >
                     <div class="space-y-1">
-                        <div class="flex items-center gap-2">
-                            <span class="font-medium text-sm">{{ formatDate(ledger.work_date) }}</span>
-                            <Badge
-                                :variant="ledger.work_type === 'Irrigation' ? 'outline-blue' : ledger.work_type === 'Maintenance' ? 'outline-green' : 'outline-gray'"
-                                class="text-[10px] px-1 py-0"
-                            >
-                                {{ ledger.work_type }}
-                            </Badge>
-                            <Badge
-                                :variant="ledger.billed ? 'outline-green' : 'outline-red'"
-                                class="text-[10px] px-1 py-0"
-                            >
-                                {{ ledger.billed ? 'Billed' : 'Unbilled' }}
-                            </Badge>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="font-medium text-sm">{{ formatDate(ledger.work_date) }}</span>
+                                <Badge
+                                    :variant="ledger.work_type === 'Irrigation' ? 'outline-blue' : ledger.work_type === 'Maintenance' ? 'outline-green' : 'outline-gray'"
+                                    class="text-[10px] px-1 py-0"
+                                >
+                                    {{ ledger.work_type }}
+                                </Badge>
+                                <Badge
+                                    :variant="ledger.billed ? 'outline-green' : 'outline-red'"
+                                    class="text-[10px] px-1 py-0"
+                                >
+                                    {{ ledger.billed ? 'Billed' : 'Unbilled' }}
+                                </Badge>
+                            </div>
+                            <span class="text-[10px] text-muted-foreground">ID: {{ ledger.id }}</span>
                         </div>
                         <div class="text-xs text-muted-foreground line-clamp-2">
                             <p v-if="ledger.work_performed">{{ ledger.work_performed }}</p>

@@ -33,12 +33,19 @@ const formatAddress = (): string => {
 <template>
     <div class="space-y-6">
         <div class="space-y-4">
-            <!-- Contact Name -->
-            <div class="space-y-2">
-                <Label class="text-muted-foreground">Contact Name</Label>
-                <p class="text-base font-medium">
-                    {{ displayValue(customer.full_name) }}
-                </p>
+            <!-- Name Fields -->
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-2">
+                    <Label class="text-muted-foreground">Contact Name</Label>
+                    <p class="text-base font-medium">
+                        {{ displayValue(customer.full_name) }}
+                    </p>
+                </div>
+
+                <div class="space-y-2">
+                    <Label class="text-muted-foreground">Customer ID</Label>
+                    <p class="text-base">{{ customer.id }}</p>
+                </div>
             </div>
 
             <!-- Name Fields -->
