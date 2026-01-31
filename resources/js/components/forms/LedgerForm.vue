@@ -86,9 +86,6 @@ const submit = () => {
     form[method](url, {
         preserveScroll: true,
         preserveState: true,
-        headers: {
-            'X-Timezone': Intl.DateTimeFormat().resolvedOptions().timeZone,
-        },
         onSuccess: (page) => {
             const updatedLedger = (page.props.flash as any)?.ledger as Ledger | undefined
             emit('success', updatedLedger || props.ledger as Ledger)

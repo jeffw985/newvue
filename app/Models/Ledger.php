@@ -43,7 +43,7 @@ class Ledger extends Model
     protected $casts = [
         'billed' => 'bool',
         'cust_id' => 'int',
-        'work_date' => 'datetime',
+        'work_date' => 'date',
         'hours' => 'decimal:2',
         'sheet_link' => 'int',
         'deleted_at' => 'datetime',

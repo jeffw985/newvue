@@ -77,12 +77,6 @@ class LedgerController extends Controller
             'billed' => 'boolean',
         ]);
 
-        // Convert date input from user's timezone to UTC
-        $userTimezone = $request->header('X-Timezone', config('app.timezone'));
-        if (! empty($validated['work_date'])) {
-            $validated['work_date'] = Carbon::parse($validated['work_date'], $userTimezone)->utc();
-        }
-
         Ledger::create($validated);
 
         return back()->with('success', 'Ledger created successfully.');
@@ -106,12 +100,6 @@ class LedgerController extends Controller
             'sheet_link' => 'nullable|exists:sheets,id',
             'billed' => 'boolean',
         ]);
-
-        // Convert date input from user's timezone to UTC
-        $userTimezone = $request->header('X-Timezone', config('app.timezone'));
-        if (! empty($validated['work_date'])) {
-            $validated['work_date'] = Carbon::parse($validated['work_date'], $userTimezone)->utc();
-        }
 
         $ledger->update($validated);
         $ledger->load(['customer', 'sheet']);
