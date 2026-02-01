@@ -124,4 +124,14 @@ class IrrigationController extends Controller
             'irrigation' => $irrigation,
         ]);
     }
+
+    /**
+     * Remove the specified irrigation record.
+     */
+    public function destroy(Irrigation $irrigation): RedirectResponse
+    {
+        $irrigation->delete();
+
+        return back()->with('success', 'Irrigation record deleted successfully.');
+    }
 }

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { router } from '@inertiajs/vue3'
+import { Trash2 } from 'lucide-vue-next'
 import { computed, ref } from 'vue'
 
 import { Badge } from '@/components/ui/badge'
@@ -70,6 +72,16 @@ const formatDate = (dateString: string) => {
 const selectTab = (tab: 'customer' | 'ledgers' | 'irrigations' | 'maintenances' | 'schedules') => {
     activeTab.value = tab
     emit('tabChange', tab)
+}
+
+const deleteRecord = (type: string, id: number) => {
+    const endpoint = type === 'schedule' ? 'schedules' : `${type}s`
+
+    if (confirm(`Are you sure you want to delete this ${type} record?`)) {
+        router.delete(`/${endpoint}/${id}`, {
+            preserveScroll: true,
+        })
+    }
 }
 </script>
 
@@ -219,7 +231,15 @@ const selectTab = (tab: 'customer' | 'ledgers' | 'irrigations' | 'maintenances' 
                                     {{ ledger.billed ? 'Billed' : 'Unbilled' }}
                                 </Badge>
                             </div>
-                            <span class="text-[10px] text-muted-foreground">ID: {{ ledger.id }}</span>
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] text-muted-foreground">ID: {{ ledger.id }}</span>
+                                <button
+                                    @click.stop="deleteRecord('ledger', ledger.id)"
+                                    class="text-muted-foreground hover:text-destructive transition-colors"
+                                >
+                                    <Trash2 class="h-3 w-3" />
+                                </button>
+                            </div>
                         </div>
                         <div class="text-xs text-muted-foreground line-clamp-2">
                             <p v-if="ledger.work_performed">{{ ledger.work_performed }}</p>
@@ -265,7 +285,15 @@ const selectTab = (tab: 'customer' | 'ledgers' | 'irrigations' | 'maintenances' 
                     <div class="space-y-2">
                         <div class="flex items-center justify-between">
                             <span class="font-medium text-sm">{{ irrigation.site_address || 'No address' }}</span>
-                            <span class="text-[10px] text-muted-foreground">ID: {{ irrigation.id }}</span>
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] text-muted-foreground">ID: {{ irrigation.id }}</span>
+                                <button
+                                    @click.stop="deleteRecord('irrigation', irrigation.id)"
+                                    class="text-muted-foreground hover:text-destructive transition-colors"
+                                >
+                                    <Trash2 class="h-3 w-3" />
+                                </button>
+                            </div>
                         </div>
 
                         <div class="flex flex-wrap gap-2">
@@ -316,7 +344,15 @@ const selectTab = (tab: 'customer' | 'ledgers' | 'irrigations' | 'maintenances' 
                     <div class="space-y-2">
                         <div class="flex items-center justify-between">
                             <span class="font-medium text-sm">{{ maintenance.site_address || 'No address' }}</span>
-                            <span class="text-[10px] text-muted-foreground">ID: {{ maintenance.id }}</span>
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] text-muted-foreground">ID: {{ maintenance.id }}</span>
+                                <button
+                                    @click.stop="deleteRecord('maintenance', maintenance.id)"
+                                    class="text-muted-foreground hover:text-destructive transition-colors"
+                                >
+                                    <Trash2 class="h-3 w-3" />
+                                </button>
+                            </div>
                         </div>
 
                         <div class="flex flex-wrap gap-2">
@@ -356,7 +392,15 @@ const selectTab = (tab: 'customer' | 'ledgers' | 'irrigations' | 'maintenances' 
                                 <span class="font-medium text-sm">{{ schedule.start_time ? formatDate(schedule.start_time) : 'No date' }}</span>
                                 <span class="text-xs text-muted-foreground">{{ schedule.site_address }}</span>
                             </div>
-                            <span class="text-[10px] text-muted-foreground">ID: {{ schedule.id }}</span>
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] text-muted-foreground">ID: {{ schedule.id }}</span>
+                                <button
+                                    @click.stop="deleteRecord('schedule', schedule.id)"
+                                    class="text-muted-foreground hover:text-destructive transition-colors"
+                                >
+                                    <Trash2 class="h-3 w-3" />
+                                </button>
+                            </div>
                         </div>
 
                         <div class="flex flex-wrap gap-2">

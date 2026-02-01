@@ -31,12 +31,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('irrigations', [App\Http\Controllers\IrrigationController::class, 'store']);
     Route::put('irrigations/{irrigation}', [App\Http\Controllers\IrrigationController::class, 'update']);
+    Route::delete('irrigations/{irrigation}', [App\Http\Controllers\IrrigationController::class, 'destroy']);
 
     Route::post('maintenances', [App\Http\Controllers\MaintenanceController::class, 'store']);
     Route::put('maintenances/{maintenance}', [App\Http\Controllers\MaintenanceController::class, 'update']);
+    Route::delete('maintenances/{maintenance}', [App\Http\Controllers\MaintenanceController::class, 'destroy']);
 
     Route::post('schedules', [App\Http\Controllers\ScheduleController::class, 'store']);
     Route::put('schedules/{schedule}', [App\Http\Controllers\ScheduleController::class, 'update']);
+    Route::delete('schedules/{schedule}', [App\Http\Controllers\ScheduleController::class, 'destroy']);
 
     Route::get('service-calendar', [App\Http\Controllers\ServiceCalendarController::class, 'index'])->name('service-calendar.index');
     Route::put('service-calendar/{schedule}', [App\Http\Controllers\ServiceCalendarController::class, 'updateEvent'])->name('service-calendar.update');

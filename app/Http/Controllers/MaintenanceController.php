@@ -55,4 +55,14 @@ class MaintenanceController extends Controller
             'maintenance' => $maintenance,
         ]);
     }
+
+    /**
+     * Remove the specified maintenance record.
+     */
+    public function destroy(Maintenance $maintenance): RedirectResponse
+    {
+        $maintenance->delete();
+
+        return back()->with('success', 'Maintenance record deleted successfully.');
+    }
 }

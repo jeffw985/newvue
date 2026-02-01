@@ -80,4 +80,14 @@ class ScheduleController extends Controller
             'schedule' => $schedule,
         ]);
     }
+
+    /**
+     * Remove the specified service schedule record.
+     */
+    public function destroy(ServiceSchedule $schedule): RedirectResponse
+    {
+        $schedule->delete();
+
+        return back()->with('success', 'Service schedule deleted successfully.');
+    }
 }
