@@ -4,37 +4,7 @@ import { Trash2 } from 'lucide-vue-next'
 import { computed, ref } from 'vue'
 
 import { Badge } from '@/components/ui/badge'
-
-interface Ledger {
-    id: number
-    [key: string]: any
-}
-
-interface Irrigation {
-    id: number
-    [key: string]: any
-}
-
-interface Maintenance {
-    id: number
-    [key: string]: any
-}
-
-interface ServiceSchedule {
-    id: number
-    [key: string]: any
-}
-
-interface Customer {
-    ledgers?: Ledger[]
-    irrigations?: Irrigation[]
-    maintenances?: Maintenance[]
-    service_schedules?: ServiceSchedule[]
-    ledgers_count?: number
-    irrigations_count?: number
-    maintenances_count?: number
-    service_schedules_count?: number
-}
+import type { Customer } from '@/types/models'
 
 const props = defineProps<{
     customer: Customer
@@ -319,8 +289,8 @@ const deleteRecord = (type: string, id: number) => {
                             </div>
                         </div>
 
-                        <div v-if="irrigation.notes || irrigation.irrig_notes" class="text-xs text-muted-foreground line-clamp-2">
-                            {{ irrigation.notes || irrigation.irrig_notes }}
+                        <div v-if="irrigation.irrig_notes" class="text-xs text-muted-foreground line-clamp-2">
+                            {{ irrigation.irrig_notes }}
                         </div>
                     </div>
                 </div>
@@ -364,9 +334,6 @@ const deleteRecord = (type: string, id: number) => {
                             </Badge>
                         </div>
 
-                        <div v-if="maintenance.notes" class="text-xs text-muted-foreground line-clamp-2">
-                            {{ maintenance.notes }}
-                        </div>
                     </div>
                 </div>
             </div>
