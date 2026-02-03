@@ -35,7 +35,16 @@ export interface Customer {
 
 export interface Prospect {
     id: number
-    // Add prospect fields as needed
+    city: string | null
+    confirmation: string | null
+    date: string | null
+    email: string | null
+    name: string | null
+    phone: string | null
+    state: string | null
+    street: string | null
+    work_description: string | null
+    zip: string | null
 }
 
 export interface Irrigation {

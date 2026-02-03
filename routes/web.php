@@ -48,6 +48,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('area-groups', [\App\Http\Controllers\AreaGroupController::class, 'store'])->name('area-groups.store');
     Route::put('area-groups/{areaGroup}', [\App\Http\Controllers\AreaGroupController::class, 'update'])->name('area-groups.update');
     Route::delete('area-groups/{areaGroup}', [\App\Http\Controllers\AreaGroupController::class, 'destroy'])->name('area-groups.destroy');
+
+    Route::get('prospects', [App\Http\Controllers\ProspectController::class, 'index'])->name('prospects.index');
+    Route::post('prospects', [App\Http\Controllers\ProspectController::class, 'store'])->name('prospects.store');
+    Route::put('prospects/{prospect}', [App\Http\Controllers\ProspectController::class, 'update'])->name('prospects.update');
+    Route::delete('prospects/{prospect}', [App\Http\Controllers\ProspectController::class, 'destroy'])->name('prospects.destroy');
 });
 
 require __DIR__.'/settings.php';

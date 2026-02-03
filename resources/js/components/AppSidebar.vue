@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, BookText, Calendar, FileSpreadsheet, Folder, LayoutGrid, MapPin, Users } from 'lucide-vue-next';
+import { BookOpen, BookText, Calendar, FileSpreadsheet, Folder, LayoutGrid, MapPin, UserSearch, Users } from 'lucide-vue-next';
 
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -49,6 +49,11 @@ const mainNavItems: NavItem[] = [
         title: 'Area Groups',
         href: '/area-groups',
         icon: MapPin,
+    },
+    {
+        title: 'Prospects',
+        href: '/prospects',
+        icon: UserSearch,
     },
 ];
 
