@@ -43,10 +43,13 @@ class ServiceSchedule extends Model
         'end_time' => 'datetime',
         'start_time' => 'datetime',
         'deleted_at' => 'datetime',
+        'last_synced_at' => 'datetime',
         'service_requested' => 'array',
     ];
 
     protected $fillable = [
+        'google_event_id',
+        'last_synced_at',
         'crew_assigned',
         'crew_comments',
         'cust_id',
