@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\ServiceSchedule;
 use App\Observers\ServiceScheduleObserver;
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
@@ -28,6 +29,9 @@ class AppServiceProvider extends ServiceProvider
         $this->configureDefaults();
 
         ServiceSchedule::observe(ServiceScheduleObserver::class);
+
+        // Set 'Remember Me' cookie lifetime to 6 months (in minutes)
+        Config::set('auth.guards.web.remember', 259200);
     }
 
     protected function configureDefaults(): void
