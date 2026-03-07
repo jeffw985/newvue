@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, BookText, Calendar, FileSpreadsheet, Folder, LayoutGrid, MapPin, UserSearch, Users } from 'lucide-vue-next';
+import { BookOpen, BookText, Calendar, FileSpreadsheet, Folder, LayoutGrid, MapPin, Smartphone, UserSearch, Users } from 'lucide-vue-next';
 
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -57,6 +57,14 @@ const mainNavItems: NavItem[] = [
     },
 ];
 
+const mobileNavItems: NavItem[] = [
+    {
+        title: 'Crew Schedule',
+        href: '/crew-schedule',
+        icon: Smartphone,
+    },
+];
+
 const footerNavItems: NavItem[] = [
     {
         title: 'Github Repo',
@@ -87,6 +95,7 @@ const footerNavItems: NavItem[] = [
 
         <SidebarContent>
             <NavMain :items="mainNavItems" />
+            <NavMain label="Mobile" :items="mobileNavItems" />
         </SidebarContent>
 
         <SidebarFooter>

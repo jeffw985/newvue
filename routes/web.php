@@ -53,6 +53,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('prospects', [App\Http\Controllers\ProspectController::class, 'store'])->name('prospects.store');
     Route::put('prospects/{prospect}', [App\Http\Controllers\ProspectController::class, 'update'])->name('prospects.update');
     Route::delete('prospects/{prospect}', [App\Http\Controllers\ProspectController::class, 'destroy'])->name('prospects.destroy');
+
+    Route::get('crew-schedule', [App\Http\Controllers\CrewScheduleController::class, 'index'])->name('crew-schedule.index');
 });
 
 require __DIR__.'/settings.php';
