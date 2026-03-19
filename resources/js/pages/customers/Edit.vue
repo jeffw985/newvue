@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3'
-import { Pencil, Plus } from 'lucide-vue-next'
+import { Pencil, Plus, X } from 'lucide-vue-next'
 import { ref, toRefs } from 'vue'
 
 import RelatedRecordsTabs from '@/components/customers/RelatedRecordsTabs.vue'
@@ -191,13 +191,25 @@ const handleCreateScheduleSuccess = (newSchedule?: any) => {
                                 <Pencil class="mr-2 h-4 w-4" />
                                 Edit
                             </Button>
-                            <Button
+                            <div
                                 v-else
-                                @click="submitForm"
-                                size="sm"
+                                class="flex items-center gap-4"
                             >
-                                Save Changes
-                            </Button>
+                                <Button
+                                    @click="submitForm"
+                                    size="sm"
+                                >
+                                    Save Changes
+                                </Button>
+                                <button
+                                    type="button"
+                                    @click="isEditMode = false"
+                                    class="p-1 text-muted-foreground hover:text-foreground transition-colors"
+                                    title="Cancel"
+                                >
+                                    <X class="h-5 w-5" />
+                                </button>
+                            </div>
                         </div>
                     </CardHeader>
                     <CardContent>
@@ -276,7 +288,7 @@ const handleCreateScheduleSuccess = (newSchedule?: any) => {
                                 <LedgerForm
                                     v-else
                                     :ledger="selectedRecord.data"
-                                    :customers="[customer]"
+                                    :on-cancel="() => isRecordEditMode = false"
                                     @success="handleRecordSaveSuccess"
                                 />
                             </template>
@@ -290,6 +302,7 @@ const handleCreateScheduleSuccess = (newSchedule?: any) => {
                                 <IrrigationForm
                                     v-else
                                     :irrigation="selectedRecord.data"
+                                    :on-cancel="() => isRecordEditMode = false"
                                     @success="handleRecordSaveSuccess"
                                 />
                             </template>
@@ -303,6 +316,7 @@ const handleCreateScheduleSuccess = (newSchedule?: any) => {
                                 <MaintenanceForm
                                     v-else
                                     :maintenance="selectedRecord.data"
+                                    :on-cancel="() => isRecordEditMode = false"
                                     @success="handleRecordSaveSuccess"
                                 />
                             </template>
@@ -316,6 +330,7 @@ const handleCreateScheduleSuccess = (newSchedule?: any) => {
                                 <ScheduleForm
                                     v-else
                                     :schedule="selectedRecord.data"
+                                    :on-cancel="() => isRecordEditMode = false"
                                     @success="handleRecordSaveSuccess"
                                 />
                             </template>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3'
+import { X } from 'lucide-vue-next'
 
 import InputError from '@/components/InputError.vue'
 import { Button } from '@/components/ui/button'
@@ -16,6 +17,7 @@ const props = withDefaults(
         mode?: FormMode
         submitUrl?: string
         hideSubmitButton?: boolean
+        onCancel?: () => void
     }>(),
     {
         mode: 'edit',
@@ -91,11 +93,20 @@ const submit = () => {
 </script>
 
 <template>
-    <form @submit.prevent="submit" class="space-y-6">
-        <div v-if="!hideSubmitButton" class="flex justify-end">
-            <Button type="submit" size="sm" :disabled="form.processing">
+    <form @submit.prevent="submit" class="relative space-y-6">
+        <div v-if="!hideSubmitButton || onCancel" class="flex justify-end items-center gap-4">
+            <Button v-if="!hideSubmitButton" type="submit" size="sm" :disabled="form.processing">
                 {{ form.processing ? 'Saving...' : 'Save Changes' }}
             </Button>
+            <button
+                v-if="onCancel"
+                type="button"
+                @click="onCancel"
+                class="p-1 text-muted-foreground hover:text-foreground transition-colors"
+                title="Cancel"
+            >
+                <X class="h-5 w-5" />
+            </button>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">

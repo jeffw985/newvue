@@ -1,12 +1,5 @@
 <?php
 
-/** @noinspection ALL */
-/** @noinspection SpellCheckingInspection */
-
-/**
- * Created by Reliese Model.
- */
-
 namespace App\Models;
 
 use Carbon\Carbon;
@@ -15,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
  * Class Customer
@@ -32,8 +28,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string|null $zipcode
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property int|null $area_group_id
  * @property Carbon|null $deleted_at
+ * @property int|null $area_group_id
  * @property string|null $xero_contact_id
  * @property string|null $first
  * @property string|null $last
@@ -43,22 +39,21 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string|null $spouse_first
  * @property string|null $spouse_last
  * @property-read AreaGroup|null $areaGroup
- * @property-read Collection<int, Irrigation> $irrigations
  * @property-read Collection<int, Ledger> $ledgers
  * @property-read Collection<int, Maintenance> $maintenances
  * @property-read Collection<int, ServiceSchedule> $serviceSchedules
+ * @property-read Collection<int, Irrigation> $irrigations
  */
-class Customer extends Model
+class Customer extends Model implements HasMedia
 {
-    use SoftDeletes;
+    use InteractsWithMedia, SoftDeletes;
 
     protected $table = 'customers';
 
     protected $casts = [
-        'irrigation' => 'bool',
-        'maintenance' => 'bool',
-        'area_group_id' => 'int',
-        'deleted_at' => 'datetime',
+        'irrigation' => 'boolean',
+        'maintenance' => 'boolean',
+        'area_group_id' => 'integer',
     ];
 
     protected $fillable = [
@@ -83,14 +78,10 @@ class Customer extends Model
         'spouse_last',
     ];
 
+    /** Relationships */
     public function areaGroup(): BelongsTo
     {
         return $this->belongsTo(AreaGroup::class);
-    }
-
-    public function irrigations(): HasMany
-    {
-        return $this->hasMany(Irrigation::class, 'cust_id');
     }
 
     public function ledgers(): HasMany
@@ -103,8 +94,42 @@ class Customer extends Model
         return $this->hasMany(Maintenance::class, 'cust_id');
     }
 
+    public function irrigations(): HasMany
+    {
+        return $this->hasMany(Irrigation::class, 'cust_id');
+    }
+
+    /** @noinspection PhpUnused */
     public function serviceSchedules(): HasMany
     {
         return $this->hasMany(ServiceSchedule::class, 'cust_id');
+    }
+
+    /**
+     * Register media conversions for customer photos
+     */
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->width(200)
+            ->height(200)
+            ->sharpen(10)
+            ->format('jpg')
+            ->performOnCollections('customer_photos')
+            ->nonQueued();
+
+        $this->addMediaConversion('preview')
+            ->width(800)
+            ->height(600)
+            ->sharpen(10)
+            ->format('jpg')
+            ->performOnCollections('customer_photos')
+            ->nonQueued();
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('customer_photos')
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/jpg', 'image/heic']);
     }
 }

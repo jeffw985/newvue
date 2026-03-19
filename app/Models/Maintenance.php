@@ -26,6 +26,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string|null $site_address
  * @property int|null $sequence_order
  * @property Carbon|null $deleted_at
+ * @property string|null $maint_notes
+ * @property bool $rock_only
+ * @property bool $mulch_client
  * @property string|null $subdivision
  * @property-read Customer $customer
  */
@@ -50,6 +53,9 @@ class Maintenance extends Model
         'site_address',
         'sequence_order',
         'subdivision',
+        'maint_notes',
+        'rock_only',
+        'mulch_client',
     ];
 
     public function customer(): BelongsTo
