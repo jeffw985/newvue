@@ -23,6 +23,9 @@ class MaintenanceController extends Controller
             'site_address' => 'nullable|string|max:255',
             'subdivision' => 'nullable|string|max:255',
             'sequence_order' => 'nullable|integer',
+            'rock_only' => 'boolean',
+            'mulch_client' => 'boolean',
+            'maint_notes' => 'nullable|string',
         ]);
 
         $maintenance = Maintenance::create($validated);
@@ -46,6 +49,9 @@ class MaintenanceController extends Controller
             'site_address' => 'nullable|string|max:255',
             'subdivision' => 'nullable|string|max:255',
             'sequence_order' => 'nullable|integer',
+            'rock_only' => 'boolean',
+            'mulch_client' => 'boolean',
+            'maint_notes' => 'nullable|string',
         ]);
 
         $maintenance->update($validated);

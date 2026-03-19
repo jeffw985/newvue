@@ -332,8 +332,17 @@ const deleteRecord = (type: string, id: number) => {
                             <Badge v-if="maintenance.annual_pay" variant="outline-purple" class="text-[10px] px-1 py-0">
                                 Annual Pay
                             </Badge>
+                            <Badge v-if="maintenance.rock_only" variant="outline-amber" class="text-[10px] px-1 py-0">
+                                Rock Only
+                            </Badge>
+                            <Badge v-if="maintenance.mulch_client" variant="outline-blue" class="text-[10px] px-1 py-0">
+                                Mulch Client
+                            </Badge>
                         </div>
 
+                        <div v-if="maintenance.maint_notes" class="text-xs text-muted-foreground line-clamp-2">
+                            {{ maintenance.maint_notes }}
+                        </div>
                     </div>
                 </div>
             </div>

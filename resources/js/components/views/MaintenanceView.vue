@@ -43,9 +43,28 @@ const displayValue = (value: any): string => {
                         </p>
                     </div>
                     <div class="space-y-1">
+                        <Label class="text-xs text-muted-foreground uppercase">Rock Only</Label>
+                        <p class="text-sm">
+                            <Badge :variant="maintenance.rock_only ? 'outline-green' : 'outline-red'">{{ maintenance.rock_only ? 'Yes' : 'No' }}</Badge>
+                        </p>
+                    </div>
+                    <div class="space-y-1">
+                        <Label class="text-xs text-muted-foreground uppercase">Mulch Client</Label>
+                        <p class="text-sm">
+                            <Badge :variant="maintenance.mulch_client ? 'outline-green' : 'outline-red'">{{ maintenance.mulch_client ? 'Yes' : 'No' }}</Badge>
+                        </p>
+                    </div>
+                    <div class="space-y-1">
                         <Label class="text-xs text-muted-foreground uppercase">Sequence Order</Label>
                         <p class="text-sm">{{ displayValue(maintenance.sequence_order) }}</p>
                     </div>
+                </div>
+            </div>
+            <div class="space-y-4">
+                <h3 class="text-sm font-semibold border-b pb-1 uppercase tracking-wider text-muted-foreground">Notes</h3>
+                <div class="space-y-2">
+                    <Label class="text-xs text-muted-foreground uppercase">Maintenance Notes</Label>
+                    <p class="text-sm whitespace-pre-wrap">{{ displayValue(maintenance.maint_notes) }}</p>
                 </div>
             </div>
         </div>

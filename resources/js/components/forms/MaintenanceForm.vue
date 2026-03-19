@@ -36,7 +36,10 @@ const form = useForm({
     service_interval: props.maintenance?.service_interval ?? '',
     mulch_color: props.maintenance?.mulch_color ?? '',
     annual_pay: !!props.maintenance?.annual_pay,
+    rock_only: !!props.maintenance?.rock_only,
+    mulch_client: !!props.maintenance?.mulch_client,
     sequence_order: props.maintenance?.sequence_order ?? undefined,
+    maint_notes: props.maintenance?.maint_notes ?? '',
 })
 
 const submit = () => {
@@ -127,10 +130,41 @@ const submit = () => {
                     <Label for="annual_pay">Annual Pay</Label>
                 </div>
 
+                <div class="flex items-center space-x-2 pt-2">
+                    <input
+                        id="rock_only"
+                        v-model="form.rock_only"
+                        type="checkbox"
+                        class="h-4 w-4 rounded border-gray-300"
+                    />
+                    <Label for="rock_only">Rock Only</Label>
+                </div>
+
+                <div class="flex items-center space-x-2 pt-2">
+                    <input
+                        id="mulch_client"
+                        v-model="form.mulch_client"
+                        type="checkbox"
+                        class="h-4 w-4 rounded border-gray-300"
+                    />
+                    <Label for="mulch_client">Mulch Client</Label>
+                </div>
+
                 <div class="space-y-2">
                     <Label for="sequence_order">Sequence Order</Label>
                     <Input type="number" id="sequence_order" v-model="form.sequence_order" />
                     <InputError :message="form.errors.sequence_order" />
+                </div>
+
+                <div class="space-y-2">
+                    <Label for="maint_notes">Maintenance Notes</Label>
+                    <textarea
+                        id="maint_notes"
+                        v-model="form.maint_notes"
+                        rows="3"
+                        class="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    ></textarea>
+                    <InputError :message="form.errors.maint_notes" />
                 </div>
             </div>
         </div>

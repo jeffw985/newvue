@@ -90,6 +90,9 @@ export interface Maintenance {
     site_address: string | null
     sequence_order: number | null
     subdivision: string | null
+    maint_notes: string | null
+    rock_only: boolean
+    mulch_client: boolean
     customer?: Customer
 }
 
