@@ -164,5 +164,63 @@ const displayValue = (value: any): string => {
                 {{ displayValue(irrigation.irrig_notes) }}
             </p>
         </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-4">
+                <h3 class="text-sm font-semibold border-b pb-1 uppercase tracking-wider text-muted-foreground">Scheduling</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <Label class="text-xs text-muted-foreground uppercase">Required By</Label>
+                        <p class="text-sm">{{ formatDateForDisplay(irrigation.required_by) }}</p>
+                    </div>
+                    <div class="space-y-1">
+                        <Label class="text-xs text-muted-foreground uppercase">Clear List</Label>
+                        <p class="text-sm">
+                            <Badge :variant="irrigation.clear_list ? 'outline-green' : 'outline-gray'">{{ irrigation.clear_list ? 'Yes' : 'No' }}</Badge>
+                        </p>
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <Label class="text-xs text-muted-foreground uppercase">Required Reason</Label>
+                    <p class="text-sm">{{ displayValue(irrigation.required_reason) }}</p>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <h3 class="text-sm font-semibold border-b pb-1 uppercase tracking-wider text-muted-foreground">Payment & Billing</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <Label class="text-xs text-muted-foreground uppercase">Paid</Label>
+                        <p class="text-sm">
+                            <Badge :variant="irrigation.paid ? 'outline-green' : 'outline-red'">{{ irrigation.paid ? 'Yes' : 'No' }}</Badge>
+                        </p>
+                    </div>
+                    <div class="space-y-1">
+                        <Label class="text-xs text-muted-foreground uppercase">Amount</Label>
+                        <p class="text-sm">{{ irrigation.paid_amount ? `$${irrigation.paid_amount}` : 'N/A' }}</p>
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <Label class="text-xs text-muted-foreground uppercase">Payment Type</Label>
+                    <p class="text-sm">{{ displayValue(irrigation.payment_type) }}</p>
+                </div>
+                <div class="space-y-1">
+                    <Label class="text-xs text-muted-foreground uppercase">Prepayment Waived</Label>
+                    <p class="text-sm">
+                        <Badge :variant="irrigation.prepayment_waived ? 'outline-blue' : 'outline-gray'">{{ irrigation.prepayment_waived ? 'Yes' : 'No' }}</Badge>
+                    </p>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <Label class="text-xs text-muted-foreground uppercase">Submitted</Label>
+                        <p class="text-sm">{{ displayValue(irrigation.submitted) }}</p>
+                    </div>
+                    <div class="space-y-1">
+                        <Label class="text-xs text-muted-foreground uppercase">Billed</Label>
+                        <p class="text-sm">{{ displayValue(irrigation.billed) }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>

@@ -1,17 +1,11 @@
 <?php
 
-/** @noinspection SpellCheckingInspection */
-
-/**
- * Created by Reliese Model.
- */
-
 namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class Irrigation
@@ -43,12 +37,22 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string|null $site_id
  * @property bool $turn_on
  * @property Carbon|null $turn_on_date
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
  * @property string|null $site_address
  * @property int|null $sequence_order
- * @property Carbon|null $deleted_at
  * @property string|null $subdivision
+ * @property Carbon|null $required_by
+ * @property string|null $required_reason
+ * @property bool|null $paid
+ * @property string|null $paid_amount
+ * @property string|null $payment_type
+ * @property string|null $submitted
+ * @property string|null $billed
+ * @property bool $prepayment_waived
+ * @property bool $clear_list
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ *
  * @property-read Customer $customer
  */
 class Irrigation extends Model
@@ -58,21 +62,26 @@ class Irrigation extends Model
     protected $table = 'irrigation';
 
     protected $casts = [
-        'cust_id' => 'int',
+        'cust_id' => 'integer',
         'backflow_test_date' => 'date',
-        'backflow_testing' => 'bool',
-        'backflow_test_pass' => 'bool',
-        'blowout' => 'bool',
+        'backflow_testing' => 'boolean',
+        'blowout' => 'boolean',
         'blowout_date' => 'date',
-        'pvb_ai_opened' => 'bool',
-        'pvb_cv_held' => 'bool',
-        'rp_cv1_held' => 'bool',
-        'rp_cv2_held' => 'bool',
-        'rp_rv_opened' => 'bool',
-        'turn_on' => 'bool',
+        'turn_on' => 'boolean',
         'turn_on_date' => 'date',
-        'sequence_order' => 'int',
+        'sequence_order' => 'integer',
+        'required_by' => 'date',
+        'paid_amount' => 'decimal:2',
+        'prepayment_waived' => 'boolean',
+        'clear_list' => 'boolean',
         'deleted_at' => 'datetime',
+        'pvb_ai_opened' => 'string',
+        'pvb_cv_held' => 'string',
+        'rp_rv_opened' => 'string',
+        'rp_cv1_held' => 'string',
+        'rp_cv2_held' => 'string',
+        'backflow_test_pass' => 'string',
+        'paid' => 'string',
     ];
 
     protected $fillable = [
@@ -105,8 +114,18 @@ class Irrigation extends Model
         'site_address',
         'sequence_order',
         'subdivision',
+        'required_by',
+        'required_reason',
+        'paid',
+        'paid_amount',
+        'payment_type',
+        'submitted',
+        'billed',
+        'prepayment_waived',
+        'clear_list',
     ];
 
+    /** Relationships */
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class, 'cust_id');
