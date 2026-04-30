@@ -46,6 +46,15 @@ class IrrigationController extends Controller
             'rp_rv' => 'nullable|string|max:255',
             'rp_rv_opened' => 'boolean',
             'irrig_notes' => 'nullable|string',
+            'required_by' => 'nullable|date',
+            'required_reason' => 'nullable|string|max:255',
+            'paid' => 'boolean',
+            'paid_amount' => 'nullable|numeric|min:0',
+            'payment_type' => 'nullable|string|max:255',
+            'submitted' => 'nullable|string|max:255',
+            'billed' => 'nullable|string|max:255',
+            'prepayment_waived' => 'boolean',
+            'clear_list' => 'boolean',
         ]);
 
         // Convert date inputs from user's timezone to UTC
@@ -58,6 +67,9 @@ class IrrigationController extends Controller
         }
         if (! empty($validated['backflow_test_date'])) {
             $validated['backflow_test_date'] = Carbon::parse($validated['backflow_test_date'], $userTimezone)->utc();
+        }
+        if (! empty($validated['required_by'])) {
+            $validated['required_by'] = Carbon::parse($validated['required_by'], $userTimezone)->utc();
         }
 
         $irrigation = Irrigation::create($validated);
@@ -103,6 +115,15 @@ class IrrigationController extends Controller
             'rp_rv' => 'nullable|string|max:255',
             'rp_rv_opened' => 'boolean',
             'irrig_notes' => 'nullable|string',
+            'required_by' => 'nullable|date',
+            'required_reason' => 'nullable|string|max:255',
+            'paid' => 'boolean',
+            'paid_amount' => 'nullable|numeric|min:0',
+            'payment_type' => 'nullable|string|max:255',
+            'submitted' => 'nullable|string|max:255',
+            'billed' => 'nullable|string|max:255',
+            'prepayment_waived' => 'boolean',
+            'clear_list' => 'boolean',
         ]);
 
         // Convert date inputs from user's timezone to UTC
@@ -115,6 +136,9 @@ class IrrigationController extends Controller
         }
         if (! empty($validated['backflow_test_date'])) {
             $validated['backflow_test_date'] = Carbon::parse($validated['backflow_test_date'], $userTimezone)->utc();
+        }
+        if (! empty($validated['required_by'])) {
+            $validated['required_by'] = Carbon::parse($validated['required_by'], $userTimezone)->utc();
         }
 
         $irrigation->update($validated);
