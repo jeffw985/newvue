@@ -39,6 +39,8 @@ class IrrigationController extends Controller
                     $query->where('backflow_test_pass', 'Pass');
                 } elseif ($resultFilter === 'fail') {
                     $query->where('backflow_test_pass', 'Fail');
+                } elseif ($resultFilter === 'null') {
+                    $query->whereNull('backflow_test_pass');
                 }
             })
             ->when($submittedFilter !== null, function ($query) use ($submittedFilter) {
@@ -99,10 +101,10 @@ class IrrigationController extends Controller
             'backflow_type' => 'nullable|string|max:255',
             'backflow_location' => 'nullable|string|max:255',
             'backflow_testing' => 'boolean',
-            'backflow_test_pass' => 'boolean',
+            'backflow_test_pass' => 'nullable|in:Pass,Fail',
             'backflow_test_date' => 'nullable|date',
             'pvb_ai' => 'nullable|string|max:255',
-            'pvb_ai_opened' => 'boolean',
+            'pvb_ai_opened' => 'nullable|in:Opened,Did Not Open',
             'pvb_cv' => 'nullable|string|max:255',
             'pvb_cv_held' => 'boolean',
             'rp_cv1' => 'nullable|string|max:255',
@@ -110,7 +112,7 @@ class IrrigationController extends Controller
             'rp_cv2' => 'nullable|string|max:255',
             'rp_cv2_held' => 'boolean',
             'rp_rv' => 'nullable|string|max:255',
-            'rp_rv_opened' => 'boolean',
+            'rp_rv_opened' => 'nullable|in:Opened,Did Not Open',
             'irrig_notes' => 'nullable|string',
             'required_by' => 'nullable|date',
             'required_reason' => 'nullable|string|max:255',
@@ -168,10 +170,10 @@ class IrrigationController extends Controller
             'backflow_type' => 'nullable|string|max:255',
             'backflow_location' => 'nullable|string|max:255',
             'backflow_testing' => 'boolean',
-            'backflow_test_pass' => 'boolean',
+            'backflow_test_pass' => 'nullable|in:Pass,Fail',
             'backflow_test_date' => 'nullable|date',
             'pvb_ai' => 'nullable|string|max:255',
-            'pvb_ai_opened' => 'boolean',
+            'pvb_ai_opened' => 'nullable|in:Opened,Did Not Open',
             'pvb_cv' => 'nullable|string|max:255',
             'pvb_cv_held' => 'boolean',
             'rp_cv1' => 'nullable|string|max:255',
@@ -179,7 +181,7 @@ class IrrigationController extends Controller
             'rp_cv2' => 'nullable|string|max:255',
             'rp_cv2_held' => 'boolean',
             'rp_rv' => 'nullable|string|max:255',
-            'rp_rv_opened' => 'boolean',
+            'rp_rv_opened' => 'nullable|in:Opened,Did Not Open',
             'irrig_notes' => 'nullable|string',
             'required_by' => 'nullable|date',
             'required_reason' => 'nullable|string|max:255',

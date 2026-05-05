@@ -232,6 +232,7 @@ const handleEditSuccess = () => {
                                 <option value="">All Results</option>
                                 <option value="pass">Pass</option>
                                 <option value="fail">Fail</option>
+                                <option value="null">Not Tested</option>
                             </select>
                         </div>
 

@@ -18,14 +18,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $backflow_serial
  * @property Carbon|null $backflow_test_date
  * @property bool $backflow_testing
- * @property bool $backflow_test_pass
+ * @property string|null $backflow_test_pass
  * @property string|null $backflow_type
  * @property bool $blowout
  * @property Carbon|null $blowout_date
  * @property string|null $controller_location
  * @property string|null $irrig_notes
  * @property string|null $pvb_ai
- * @property bool $pvb_ai_opened
+ * @property string|null $pvb_ai_opened
  * @property string|null $pvb_cv
  * @property bool $pvb_cv_held
  * @property string|null $rp_cv1
@@ -33,7 +33,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $rp_cv2
  * @property bool $rp_cv2_held
  * @property string|null $rp_rv
- * @property bool $rp_rv_opened
+ * @property string|null $rp_rv_opened
  * @property string|null $site_id
  * @property bool $turn_on
  * @property Carbon|null $turn_on_date

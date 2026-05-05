@@ -50,10 +50,10 @@ const form = useForm({
     backflow_type: props.irrigation?.backflow_type ?? '',
     backflow_location: props.irrigation?.backflow_location ?? '',
     backflow_testing: !!props.irrigation?.backflow_testing,
-    backflow_test_pass: !!props.irrigation?.backflow_test_pass,
+    backflow_test_pass: props.irrigation?.backflow_test_pass ?? '',
     backflow_test_date: formatDateForInput(props.irrigation?.backflow_test_date),
     pvb_ai: props.irrigation?.pvb_ai ?? '',
-    pvb_ai_opened: !!props.irrigation?.pvb_ai_opened,
+    pvb_ai_opened: props.irrigation?.pvb_ai_opened ?? '',
     pvb_cv: props.irrigation?.pvb_cv ?? '',
     pvb_cv_held: !!props.irrigation?.pvb_cv_held,
     rp_cv1: props.irrigation?.rp_cv1 ?? '',
@@ -61,7 +61,7 @@ const form = useForm({
     rp_cv2: props.irrigation?.rp_cv2 ?? '',
     rp_cv2_held: !!props.irrigation?.rp_cv2_held,
     rp_rv: props.irrigation?.rp_rv ?? '',
-    rp_rv_opened: !!props.irrigation?.rp_rv_opened,
+    rp_rv_opened: props.irrigation?.rp_rv_opened ?? '',
     site_id: props.irrigation?.site_id ?? '',
     sequence_order: props.irrigation?.sequence_order ?? undefined,
     irrig_notes: props.irrigation?.irrig_notes ?? '',
@@ -85,7 +85,17 @@ const submit = () => {
 
     const method = props.mode === 'create' ? 'post' : 'put'
 
-    form[method](url, {
+    // Transform empty strings to null for proper validation
+    const transformedData = {
+        ...form.data(),
+        backflow_test_pass: form.backflow_test_pass === '' ? null : form.backflow_test_pass,
+        pvb_ai_opened: form.pvb_ai_opened === '' ? null : form.pvb_ai_opened,
+        rp_rv_opened: form.rp_rv_opened === '' ? null : form.rp_rv_opened,
+        submitted: form.submitted === '' ? null : form.submitted,
+        billed: form.billed === '' ? null : form.billed,
+    }
+
+    form.transform(() => transformedData)[method](url, {
         preserveScroll: true,
         headers: {
             'X-Timezone': Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -95,6 +105,8 @@ const submit = () => {
             emit('success', updatedIrrigation || props.irrigation as Irrigation)
         },
         onError: (errors) => {
+            console.error('Irrigation form validation errors:', errors)
+            console.log('Form data being submitted:', transformedData)
             emit('error', errors)
         },
     })
@@ -233,14 +245,18 @@ const submit = () => {
                 </div>
 
                 <div class="space-y-4 border p-3 rounded-md">
-                    <div class="flex items-center space-x-2">
-                        <input
+                    <div class="space-y-2">
+                        <Label for="backflow_test_pass">Test Result</Label>
+                        <select
                             id="backflow_test_pass"
                             v-model="form.backflow_test_pass"
-                            type="checkbox"
-                            class="h-4 w-4 rounded border-gray-300"
-                        />
-                        <Label for="backflow_test_pass">Pass</Label>
+                            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                        >
+                            <option value="">Not Tested</option>
+                            <option value="Pass">Pass</option>
+                            <option value="Fail">Fail</option>
+                        </select>
+                        <InputError :message="form.errors.backflow_test_pass" />
                     </div>
 
                     <div class="grid grid-cols-2 gap-4 pt-2 border-t">
@@ -249,10 +265,15 @@ const submit = () => {
                             <div class="space-y-2">
                                 <Label for="pvb_ai">Air Inlet</Label>
                                 <Input id="pvb_ai" v-model="form.pvb_ai" placeholder="Value" />
-                                <div class="flex items-center space-x-2">
-                                    <input id="pvb_ai_opened" v-model="form.pvb_ai_opened" type="checkbox" class="h-3 w-3 rounded" />
-                                    <Label for="pvb_ai_opened" class="text-xs">Opened</Label>
-                                </div>
+                                <select
+                                    id="pvb_ai_opened"
+                                    v-model="form.pvb_ai_opened"
+                                    class="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-xs ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                >
+                                    <option value="">Not Tested</option>
+                                    <option value="Opened">Opened</option>
+                                    <option value="Did Not Open">Did Not Open</option>
+                                </select>
                             </div>
                             <div class="space-y-2">
                                 <Label for="pvb_cv">Check Valve</Label>
@@ -284,10 +305,15 @@ const submit = () => {
                             <div class="space-y-2">
                                 <Label for="rp_rv">RV</Label>
                                 <Input id="rp_rv" v-model="form.rp_rv" placeholder="Value" />
-                                <div class="flex items-center space-x-2">
-                                    <input id="rp_rv_opened" v-model="form.rp_rv_opened" type="checkbox" class="h-3 w-3 rounded" />
-                                    <Label for="rp_rv_opened" class="text-xs">Opened</Label>
-                                </div>
+                                <select
+                                    id="rp_rv_opened"
+                                    v-model="form.rp_rv_opened"
+                                    class="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-xs ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                >
+                                    <option value="">Not Tested</option>
+                                    <option value="Opened">Opened</option>
+                                    <option value="Did Not Open">Did Not Open</option>
+                                </select>
                             </div>
                         </div>
                     </div>
