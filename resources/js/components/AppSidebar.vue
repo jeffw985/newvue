@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, BookText, Calendar, FileSpreadsheet, Folder, LayoutGrid, MapPin, Smartphone, UserSearch, Users } from 'lucide-vue-next';
+import { BookOpen, BookText, Calendar, Droplets, FileSpreadsheet, Folder, LayoutGrid, MapPin, Smartphone, UserSearch, Users } from 'lucide-vue-next';
 
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -29,6 +29,11 @@ const mainNavItems: NavItem[] = [
         title: 'Customers',
         href: '/customers',
         icon: Users,
+    },
+    {
+        title: 'Irrigation Completions',
+        href: '/irrigation-completions',
+        icon: Droplets,
     },
     {
         title: 'Ledger',

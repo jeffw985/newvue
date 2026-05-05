@@ -8,9 +8,75 @@ use App\Models\Irrigation;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class IrrigationController extends Controller
 {
+    /**
+     * Display a listing of irrigation records.
+     */
+    public function index(Request $request): Response
+    {
+        $search = $request->input('search');
+        $resultFilter = $request->input('result');
+        $submittedFilter = $request->input('submitted');
+        $billedFilter = $request->input('billed');
+        $completeFilter = $request->input('complete');
+
+        $irrigations = Irrigation::query()
+            ->with('customer:id,full_name')
+            ->when($search, function ($query, $search) {
+                $searchTerm = strtolower($search);
+                $query->where(function ($q) use ($searchTerm) {
+                    $q->whereHas('customer', function ($q) use ($searchTerm) {
+                        $q->whereRaw('LOWER(full_name) like ?', ["%$searchTerm%"]);
+                    })->orWhereRaw('LOWER(site_address) like ?', ["%$searchTerm%"]);
+                });
+            })
+            ->when($resultFilter !== null, function ($query) use ($resultFilter) {
+                if ($resultFilter === 'pass') {
+                    $query->where('backflow_test_pass', 'Pass');
+                } elseif ($resultFilter === 'fail') {
+                    $query->where('backflow_test_pass', 'Fail');
+                }
+            })
+            ->when($submittedFilter !== null, function ($query) use ($submittedFilter) {
+                if ($submittedFilter === 'null') {
+                    $query->whereNull('submitted');
+                } else {
+                    $query->where('submitted', $submittedFilter);
+                }
+            })
+            ->when($billedFilter !== null, function ($query) use ($billedFilter) {
+                if ($billedFilter === 'null') {
+                    $query->whereNull('billed');
+                } else {
+                    $query->where('billed', $billedFilter);
+                }
+            })
+            ->when($completeFilter !== null, function ($query) use ($completeFilter) {
+                if ($completeFilter === 'complete') {
+                    $query->where('clear_list', true);
+                } elseif ($completeFilter === 'incomplete') {
+                    $query->where('clear_list', false);
+                }
+            })
+            ->orderBy('turn_on_date', 'asc')
+            ->get();
+
+        return Inertia::render('irrigation-completions/Index', [
+            'irrigations' => $irrigations,
+            'search' => $search,
+            'filters' => [
+                'result' => $resultFilter,
+                'submitted' => $submittedFilter,
+                'billed' => $billedFilter,
+                'complete' => $completeFilter,
+            ],
+        ]);
+    }
+
     /**
      * Store a newly created irrigation record.
      */
@@ -147,6 +213,29 @@ class IrrigationController extends Controller
             'success' => 'Irrigation record updated successfully.',
             'irrigation' => $irrigation,
         ]);
+    }
+
+    /**
+     * Update specific field (for inline editing).
+     */
+    public function updateField(Request $request, Irrigation $irrigation): RedirectResponse
+    {
+        $validated = $request->validate([
+            'field' => 'required|in:submitted,billed,clear_list',
+            'value' => 'nullable',
+        ]);
+
+        // Handle boolean conversion for clear_list
+        $value = $validated['value'];
+        if ($validated['field'] === 'clear_list') {
+            $value = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+        }
+
+        $irrigation->update([
+            $validated['field'] => $value,
+        ]);
+
+        return back();
     }
 
     /**

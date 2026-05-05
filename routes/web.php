@@ -29,8 +29,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('sheets/{sheet}', [App\Http\Controllers\SheetController::class, 'update'])->name('sheets.update');
     Route::delete('sheets/{sheet}', [App\Http\Controllers\SheetController::class, 'destroy'])->name('sheets.destroy');
 
+    Route::get('irrigation-completions', [App\Http\Controllers\IrrigationController::class, 'index'])->name('irrigation-completions.index');
     Route::post('irrigations', [App\Http\Controllers\IrrigationController::class, 'store']);
     Route::put('irrigations/{irrigation}', [App\Http\Controllers\IrrigationController::class, 'update']);
+    Route::patch('irrigations/{irrigation}/field', [App\Http\Controllers\IrrigationController::class, 'updateField'])->name('irrigations.update-field');
     Route::delete('irrigations/{irrigation}', [App\Http\Controllers\IrrigationController::class, 'destroy']);
 
     Route::post('maintenances', [App\Http\Controllers\MaintenanceController::class, 'store']);
