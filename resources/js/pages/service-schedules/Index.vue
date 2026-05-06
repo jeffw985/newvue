@@ -3,8 +3,16 @@ import { Head, router } from '@inertiajs/vue3'
 import { MoreVertical, Search, X, Pencil, Trash2 } from 'lucide-vue-next'
 import { ref, watch } from 'vue'
 
+import ServiceScheduleForm from '@/components/forms/ServiceScheduleForm.vue'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog'
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -21,14 +29,6 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table'
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog'
-import ServiceScheduleForm from '@/components/forms/ServiceScheduleForm.vue'
 import AppLayout from '@/layouts/AppLayout.vue'
 import type { BreadcrumbItem } from '@/types'
 import type { ServiceSchedule } from '@/types/models'
@@ -65,7 +65,7 @@ const applySearch = () => {
     })
 }
 
-watch(search, (value) => {
+watch(search, () => {
     if (searchTimeout) {
         clearTimeout(searchTimeout)
     }
@@ -76,11 +76,6 @@ watch(search, (value) => {
 
 const clearSearch = () => {
     search.value = ''
-}
-
-const formatDate = (date: string | null): string => {
-    if (!date) return 'N/A'
-    return new Date(date).toLocaleDateString()
 }
 
 const formatDateTime = (date: string | null): string => {
@@ -95,7 +90,7 @@ const formatDateTime = (date: string | null): string => {
     })
 }
 
-const getServiceRequestedColor = (service: string): string => {
+const getServiceRequestedColor = (service: string): 'green' | 'blue' | 'outline-amber' | 'outline' => {
     const vLower = service.toLowerCase()
 
     // Green badges
@@ -113,7 +108,7 @@ const getServiceRequestedColor = (service: string): string => {
 
     // Amber badges
     if (vLower.includes('small job / repair') || vLower.includes('other - see notes')) {
-        return 'amber'
+        return 'outline-amber'
     }
 
     return 'outline'
@@ -235,10 +230,10 @@ const handleEditSuccess = () => {
                                     v-if="schedule.maintenance?.service_interval"
                                     :variant="
                                         schedule.maintenance.service_interval === 'Monthly' ? 'blue' :
-                                        schedule.maintenance.service_interval === 'Quarterly' ? 'purple' :
-                                        schedule.maintenance.service_interval === '3X Per Year' ? 'indigo' :
+                                        schedule.maintenance.service_interval === 'Quarterly' ? 'outline-purple' :
+                                        schedule.maintenance.service_interval === '3X Per Year' ? 'outline-blue' :
                                         schedule.maintenance.service_interval === 'Spring & Fall' ? 'green' :
-                                        schedule.maintenance.service_interval === 'Will Call' ? 'amber' :
+                                        schedule.maintenance.service_interval === 'Will Call' ? 'outline-amber' :
                                         'outline'
                                     "
                                 >

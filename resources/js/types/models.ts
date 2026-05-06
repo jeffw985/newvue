@@ -57,7 +57,7 @@ export interface Irrigation {
     backflow_serial: string | null
     backflow_test_date: string | null
     backflow_testing: boolean
-    backflow_test_pass: boolean
+    backflow_test_pass: string | null
     backflow_type: string | null
     blowout: boolean
     blowout_date: string | null
@@ -83,7 +83,7 @@ export interface Irrigation {
     required_reason: string | null
     submitted: string | null
     billed: string | null
-    clear_list: boolean
+    clear_list: boolean | null
     customer?: Customer
 }
 

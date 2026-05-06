@@ -70,7 +70,7 @@ const openEditModal = (schedule: Schedule) => {
 const updateSchedule = () => {
     if (!editingSchedule.value) return;
 
-    form.put(route('service-calendar.update', editingSchedule.value.id), {
+    form.put(`/service-calendar/${editingSchedule.value.id}`, {
         onSuccess: () => {
             isEditModalOpen.value = false;
             editingSchedule.value = null;

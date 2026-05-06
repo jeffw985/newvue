@@ -1,16 +1,26 @@
 <script setup lang="ts">
-import { Head, Link, router } from '@inertiajs/vue3'
+import { Head, router } from '@inertiajs/vue3'
 import { MoreVertical, Search, X, Pencil, Trash2 } from 'lucide-vue-next'
-import { ref, watch, computed } from 'vue'
+import { ref, watch } from 'vue'
 
+import IrrigationForm from '@/components/forms/IrrigationForm.vue'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog'
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import InlineSelect from '@/components/ui/InlineSelect.vue'
+import InlineToggle from '@/components/ui/InlineToggle.vue'
 import { Input } from '@/components/ui/input'
 import {
     Table,
@@ -21,45 +31,9 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table'
-import InlineSelect from '@/components/ui/InlineSelect.vue'
-import InlineToggle from '@/components/ui/InlineToggle.vue'
-import IrrigationForm from '@/components/forms/IrrigationForm.vue'
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog'
 import AppLayout from '@/layouts/AppLayout.vue'
 import type { BreadcrumbItem } from '@/types'
-
-interface Irrigation {
-    id: number
-    cust_id: number
-    customer: {
-        id: number
-        full_name: string
-    }
-    site_address: string | null
-    turn_on_date: string | null
-    backflow_test_date: string | null
-    backflow_test_pass: string | null
-    backflow_type: string | null
-    pvb_ai: string | null
-    pvb_ai_opened: string | null
-    pvb_cv: string | null
-    pvb_cv_held: string | null
-    rp_cv1: string | null
-    rp_cv1_held: string | null
-    rp_cv2: string | null
-    rp_cv2_held: string | null
-    rp_rv: string | null
-    rp_rv_opened: string | null
-    submitted: string | null
-    billed: string | null
-    clear_list: boolean | null
-}
+import type { Irrigation } from '@/types/models'
 
 const props = defineProps<{
     irrigations: Irrigation[]
@@ -107,7 +81,7 @@ const applyFilters = () => {
     })
 }
 
-watch(search, (value) => {
+watch(search, () => {
     if (searchTimeout) {
         clearTimeout(searchTimeout)
     }

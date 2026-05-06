@@ -25,15 +25,20 @@
                 background-color: oklch(1 0 0);
             }
 
+            /*noinspection CssUnusedSymbol*/
             html.dark {
                 background-color: oklch(0.145 0 0);
             }
         </style>
 
+        {{-- noinspection HtmlUnknownAttribute --}}
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
+        {{-- noinspection HtmlUnknownTarget --}}
         <link rel="icon" href="/favicon.ico" sizes="any">
+        {{-- noinspection HtmlUnknownTarget --}}
         <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+        {{-- noinspection HtmlUnknownTarget --}}
         <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
         <link rel="preconnect" href="https://fonts.bunny.net">
