@@ -52,7 +52,7 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/dashboard',
     },
     {
-        title: 'Irrigation Completions',
+        title: 'Irrigation Tracking',
         href: '/irrigation-completions',
     },
 ]
@@ -168,12 +168,12 @@ const handleEditSuccess = () => {
 </script>
 
 <template>
-    <Head title="Irrigation Completions" />
+    <Head title="Irrigation Tracking" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 p-4">
             <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-bold">Irrigation Completions</h1>
+                <h1 class="text-2xl font-bold">Irrigation Tracking</h1>
             </div>
 
             <div class="rounded-md border bg-card">

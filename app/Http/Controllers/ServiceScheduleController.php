@@ -17,10 +17,11 @@ class ServiceScheduleController extends Controller
     public function index(Request $request): Response
     {
         $search = $request->input('search');
+        $status = $request->input('status', 'Scheduled');
 
         $schedules = ServiceSchedule::query()
             ->with(['customer:id,full_name,street', 'customer.areaGroup', 'maintenance'])
-            ->where('service_status', 'Scheduled')
+            ->where('service_status', $status)
             ->when($search, function ($query, $search) {
                 $searchTerm = strtolower($search);
                 $query->where(function ($q) use ($searchTerm) {
@@ -29,12 +30,13 @@ class ServiceScheduleController extends Controller
                     })->orWhereRaw('LOWER(site_address) LIKE ?', ["%$searchTerm%"]);
                 });
             })
-            ->orderBy('start_time', 'asc')
+            ->orderBy('start_time', $status === 'Completed' ? 'desc' : 'asc')
             ->get();
 
         return Inertia::render('service-schedules/Index', [
             'schedules' => $schedules,
             'search' => $search,
+            'status' => $status,
         ]);
     }
 

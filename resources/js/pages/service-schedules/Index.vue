@@ -36,6 +36,7 @@ import type { ServiceSchedule } from '@/types/models'
 const props = defineProps<{
     schedules: ServiceSchedule[]
     search?: string
+    status?: string
 }>()
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -50,6 +51,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ]
 
 const search = ref(props.search || '')
+const status = ref(props.status || 'Scheduled')
 const isEditDialogOpen = ref(false)
 const editingSchedule = ref<ServiceSchedule | null>(null)
 
@@ -58,6 +60,7 @@ let searchTimeout: ReturnType<typeof setTimeout> | null = null
 const applySearch = () => {
     router.get('/service-schedules', {
         search: search.value || undefined,
+        status: status.value,
     }, {
         preserveState: true,
         preserveScroll: true,
@@ -72,6 +75,10 @@ watch(search, () => {
     searchTimeout = setTimeout(() => {
         applySearch()
     }, 300)
+})
+
+watch(status, () => {
+    applySearch()
 })
 
 const clearSearch = () => {
@@ -158,6 +165,25 @@ const handleEditSuccess = () => {
         <div class="flex h-full flex-1 flex-col gap-4 p-4">
             <div class="flex items-center justify-between">
                 <h1 class="text-2xl font-bold">Service Schedule</h1>
+            </div>
+
+            <div class="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground">
+                <Button
+                    :variant="status === 'Scheduled' ? 'default' : 'ghost'"
+                    size="sm"
+                    @click="status = 'Scheduled'"
+                    class="rounded-sm px-3"
+                >
+                    Scheduled
+                </Button>
+                <Button
+                    :variant="status === 'Completed' ? 'default' : 'ghost'"
+                    size="sm"
+                    @click="status = 'Completed'"
+                    class="rounded-sm px-3"
+                >
+                    Completed
+                </Button>
             </div>
 
             <div class="rounded-md border bg-card">

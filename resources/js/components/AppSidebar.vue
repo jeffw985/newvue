@@ -31,9 +31,9 @@ const mainNavItems: NavItem[] = [
         icon: Users,
     },
     {
-        title: 'Irrigation Completions',
-        href: '/irrigation-completions',
-        icon: Droplets,
+        title: 'Prospects',
+        href: '/prospects',
+        icon: UserSearch,
     },
     {
         title: 'Ledger',
@@ -41,9 +41,9 @@ const mainNavItems: NavItem[] = [
         icon: BookText,
     },
     {
-        title: 'Sheets',
-        href: '/sheets',
-        icon: FileSpreadsheet,
+        title: 'Service Schedule',
+        href: '/service-schedules',
+        icon: CalendarDays,
     },
     {
         title: 'Service Calendar',
@@ -51,19 +51,22 @@ const mainNavItems: NavItem[] = [
         icon: Calendar,
     },
     {
-        title: 'Service Schedule',
-        href: '/service-schedules',
-        icon: CalendarDays,
+        title: 'Irrigation Tracking',
+        href: '/irrigation-completions',
+        icon: Droplets,
+    },
+];
+
+const adminNavItems: NavItem[] = [
+    {
+        title: 'Sheets',
+        href: '/sheets',
+        icon: FileSpreadsheet,
     },
     {
         title: 'Area Groups',
         href: '/area-groups',
         icon: MapPin,
-    },
-    {
-        title: 'Prospects',
-        href: '/prospects',
-        icon: UserSearch,
     },
 ];
 
@@ -105,6 +108,7 @@ const footerNavItems: NavItem[] = [
 
         <SidebarContent>
             <NavMain :items="mainNavItems" />
+            <NavMain label="Admin" :items="adminNavItems" />
             <NavMain label="Mobile" :items="mobileNavItems" />
         </SidebarContent>
 
