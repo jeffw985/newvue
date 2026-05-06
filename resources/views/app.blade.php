@@ -31,15 +31,11 @@
             }
         </style>
 
-        {{-- noinspection HtmlUnknownAttribute --}}
-        <title inertia>{{ config('app.name', 'Laravel') }}</title>
+        <title inertia>{{ config('app.name', 'Laravel') }}</title><!--suppress HtmlUnknownAttribute -->
 
-        {{-- noinspection HtmlUnknownTarget --}}
-        <link rel="icon" href="/favicon.ico" sizes="any">
-        {{-- noinspection HtmlUnknownTarget --}}
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-        {{-- noinspection HtmlUnknownTarget --}}
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+        <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any"><!--suppress HtmlUnknownTarget -->
+        <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml"><!--suppress HtmlUnknownTarget -->
+        <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}"><!--suppress HtmlUnknownTarget -->
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />

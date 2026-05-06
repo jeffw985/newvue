@@ -66,9 +66,39 @@ const displayValue = (value: any): string => {
                             <span v-if="irrigation.blowout_date" class="ml-2 text-xs">({{ formatDateForDisplay(irrigation.blowout_date) }})</span>
                         </p>
                     </div>
+                </div>
+
+                <div class="space-y-4 pt-4 border-t">
+                    <h4 class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Scheduling</h4>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1">
+                            <Label class="text-xs text-muted-foreground uppercase">Required By</Label>
+                            <p class="text-sm">{{ formatDateForDisplay(irrigation.required_by) }}</p>
+                        </div>
+                        <div class="space-y-1">
+                            <Label class="text-xs text-muted-foreground uppercase">Required Reason</Label>
+                            <p class="text-sm">{{ displayValue(irrigation.required_reason) }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-4 pt-4 border-t">
+                    <h4 class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Administration</h4>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1">
+                            <Label class="text-xs text-muted-foreground uppercase">Submitted</Label>
+                            <p class="text-sm">{{ displayValue(irrigation.submitted) }}</p>
+                        </div>
+                        <div class="space-y-1">
+                            <Label class="text-xs text-muted-foreground uppercase">Billed</Label>
+                            <p class="text-sm">{{ displayValue(irrigation.billed) }}</p>
+                        </div>
+                    </div>
                     <div class="space-y-1">
-                        <Label class="text-xs text-muted-foreground uppercase">Controller Location</Label>
-                        <p class="text-sm">{{ displayValue(irrigation.controller_location) }}</p>
+                        <Label class="text-xs text-muted-foreground uppercase">Clear List</Label>
+                        <p class="text-sm">
+                            <Badge :variant="irrigation.clear_list ? 'outline-green' : 'outline-gray'">{{ irrigation.clear_list ? 'Yes' : 'No' }}</Badge>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -93,65 +123,77 @@ const displayValue = (value: any): string => {
                         <p class="text-sm">{{ displayValue(irrigation.backflow_type) }}</p>
                     </div>
                     <div class="space-y-1">
-                        <Label class="text-xs text-muted-foreground uppercase">Location</Label>
+                        <Label class="text-xs text-muted-foreground uppercase">Backflow Device Location</Label>
                         <p class="text-sm">{{ displayValue(irrigation.backflow_location) }}</p>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="space-y-4">
-            <h3 class="text-sm font-semibold border-b pb-1 uppercase tracking-wider text-muted-foreground">Testing</h3>
-            <div class="space-y-1">
-                <Label class="text-xs text-muted-foreground uppercase">Pass Status</Label>
-                <p class="text-sm">
-                    <Badge :variant="irrigation.backflow_test_pass ? 'outline-green' : 'outline-red'">{{ irrigation.backflow_test_pass ? 'Passed' : 'Failed/No Data' }}</Badge>
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4 border-t">
-                <div class="space-y-4">
-                    <h4 class="text-xs font-bold uppercase text-muted-foreground">PVB Results</h4>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="space-y-1">
-                            <Label class="text-xs text-muted-foreground uppercase">Air Inlet</Label>
-                            <p class="text-sm">
-                                {{ displayValue(irrigation.pvb_ai) }}
-                                <Badge v-if="irrigation.pvb_ai_opened" variant="outline" class="ml-2 text-[10px]">Opened</Badge>
-                            </p>
-                        </div>
-                        <div class="space-y-1">
-                            <Label class="text-xs text-muted-foreground uppercase">Check Valve</Label>
-                            <p class="text-sm">
-                                {{ displayValue(irrigation.pvb_cv) }}
-                                <Badge v-if="irrigation.pvb_cv_held" variant="outline" class="ml-2 text-[10px]">Held</Badge>
-                            </p>
-                        </div>
+                    <div class="space-y-1">
+                        <Label class="text-xs text-muted-foreground uppercase">Controller Location</Label>
+                        <p class="text-sm">{{ displayValue(irrigation.controller_location) }}</p>
                     </div>
                 </div>
-                <div class="space-y-4">
-                    <h4 class="text-xs font-bold uppercase text-muted-foreground">RP Results</h4>
-                    <div class="grid grid-cols-3 gap-4">
-                        <div class="space-y-1">
-                            <Label class="text-xs text-muted-foreground uppercase">CV 1</Label>
-                            <p class="text-sm">
-                                {{ displayValue(irrigation.rp_cv1) }}
-                                <Badge v-if="irrigation.rp_cv1_held" variant="outline" class="ml-2 text-[10px]">Held</Badge>
-                            </p>
+
+                <div class="space-y-4 pt-4 border-t">
+                    <h4 class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Test Results</h4>
+                    <div class="space-y-1">
+                        <Label class="text-xs text-muted-foreground uppercase">Pass Status</Label>
+                        <p class="text-sm">
+                            <Badge :variant="irrigation.backflow_test_pass === 'Pass' ? 'outline-green' : irrigation.backflow_test_pass === 'Fail' ? 'outline-red' : 'outline-gray'">
+                                {{ irrigation.backflow_test_pass || 'Not Tested' }}
+                            </Badge>
+                        </p>
+                    </div>
+
+                    <div v-if="irrigation.backflow_type === 'PVB' || irrigation.backflow_type === 'RP'" class="grid grid-cols-2 gap-4 pt-2">
+                        <div v-if="irrigation.backflow_type === 'PVB'" class="space-y-4">
+                            <h5 class="text-xs font-bold uppercase">PVB</h5>
+                            <div class="space-y-1">
+                                <Label class="text-xs text-muted-foreground uppercase">Air Inlet</Label>
+                                <p class="text-sm">
+                                    {{ displayValue(irrigation.pvb_ai) }}
+                                    <Badge v-if="irrigation.pvb_ai_opened" :variant="irrigation.pvb_ai_opened === 'Opened' ? 'outline-green' : 'outline-red'" class="ml-2 text-[10px]">
+                                        {{ irrigation.pvb_ai_opened }}
+                                    </Badge>
+                                </p>
+                            </div>
+                            <div class="space-y-1">
+                                <Label class="text-xs text-muted-foreground uppercase">Check Valve</Label>
+                                <p class="text-sm">
+                                    {{ displayValue(irrigation.pvb_cv) }}
+                                    <Badge v-if="irrigation.pvb_cv_held" :variant="irrigation.pvb_cv_held === 'Held' ? 'outline-green' : 'outline-red'" class="ml-2 text-[10px]">
+                                        {{ irrigation.pvb_cv_held }}
+                                    </Badge>
+                                </p>
+                            </div>
                         </div>
-                        <div class="space-y-1">
-                            <Label class="text-xs text-muted-foreground uppercase">CV 2</Label>
-                            <p class="text-sm">
-                                {{ displayValue(irrigation.rp_cv2) }}
-                                <Badge v-if="irrigation.rp_cv2_held" variant="outline" class="ml-2 text-[10px]">Held</Badge>
-                            </p>
-                        </div>
-                        <div class="space-y-1">
-                            <Label class="text-xs text-muted-foreground uppercase">RV</Label>
-                            <p class="text-sm">
-                                {{ displayValue(irrigation.rp_rv) }}
-                                <Badge v-if="irrigation.rp_rv_opened" variant="outline" class="ml-2 text-[10px]">Opened</Badge>
-                            </p>
+                        <div v-if="irrigation.backflow_type === 'RP'" class="space-y-4">
+                            <h5 class="text-xs font-bold uppercase">RP</h5>
+                            <div class="space-y-1">
+                                <Label class="text-xs text-muted-foreground uppercase">CV 1</Label>
+                                <p class="text-sm">
+                                    {{ displayValue(irrigation.rp_cv1) }}
+                                    <Badge v-if="irrigation.rp_cv1_held" :variant="irrigation.rp_cv1_held === 'Held' ? 'outline-green' : 'outline-red'" class="ml-2 text-[10px]">
+                                        {{ irrigation.rp_cv1_held }}
+                                    </Badge>
+                                </p>
+                            </div>
+                            <div class="space-y-1">
+                                <Label class="text-xs text-muted-foreground uppercase">CV 2</Label>
+                                <p class="text-sm">
+                                    {{ displayValue(irrigation.rp_cv2) }}
+                                    <Badge v-if="irrigation.rp_cv2_held" :variant="irrigation.rp_cv2_held === 'Held' ? 'outline-green' : 'outline-red'" class="ml-2 text-[10px]">
+                                        {{ irrigation.rp_cv2_held }}
+                                    </Badge>
+                                </p>
+                            </div>
+                            <div class="space-y-1">
+                                <Label class="text-xs text-muted-foreground uppercase">RV</Label>
+                                <p class="text-sm">
+                                    {{ displayValue(irrigation.rp_rv) }}
+                                    <Badge v-if="irrigation.rp_rv_opened" :variant="irrigation.rp_rv_opened === 'Opened' ? 'outline-green' : 'outline-red'" class="ml-2 text-[10px]">
+                                        {{ irrigation.rp_rv_opened }}
+                                    </Badge>
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -163,42 +205,6 @@ const displayValue = (value: any): string => {
             <p class="text-sm whitespace-pre-wrap rounded-md border bg-muted/50 px-3 py-2 min-h-[60px]">
                 {{ displayValue(irrigation.irrig_notes) }}
             </p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="space-y-4">
-                <h3 class="text-sm font-semibold border-b pb-1 uppercase tracking-wider text-muted-foreground">Scheduling</h3>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="space-y-1">
-                        <Label class="text-xs text-muted-foreground uppercase">Required By</Label>
-                        <p class="text-sm">{{ formatDateForDisplay(irrigation.required_by) }}</p>
-                    </div>
-                    <div class="space-y-1">
-                        <Label class="text-xs text-muted-foreground uppercase">Clear List</Label>
-                        <p class="text-sm">
-                            <Badge :variant="irrigation.clear_list ? 'outline-green' : 'outline-gray'">{{ irrigation.clear_list ? 'Yes' : 'No' }}</Badge>
-                        </p>
-                    </div>
-                </div>
-                <div class="space-y-1">
-                    <Label class="text-xs text-muted-foreground uppercase">Required Reason</Label>
-                    <p class="text-sm">{{ displayValue(irrigation.required_reason) }}</p>
-                </div>
-            </div>
-
-            <div class="space-y-4">
-                <h3 class="text-sm font-semibold border-b pb-1 uppercase tracking-wider text-muted-foreground">Billing</h3>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="space-y-1">
-                        <Label class="text-xs text-muted-foreground uppercase">Submitted</Label>
-                        <p class="text-sm">{{ displayValue(irrigation.submitted) }}</p>
-                    </div>
-                    <div class="space-y-1">
-                        <Label class="text-xs text-muted-foreground uppercase">Billed</Label>
-                        <p class="text-sm">{{ displayValue(irrigation.billed) }}</p>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </template>

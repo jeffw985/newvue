@@ -203,10 +203,42 @@ const submit = () => {
                     </div>
                 </div>
 
-                <div class="space-y-2">
-                    <Label for="controller_location">Controller Location</Label>
-                    <Input id="controller_location" v-model="form.controller_location" />
-                    <InputError :message="form.errors.controller_location" />
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <Label for="required_by">Required By</Label>
+                        <Input id="required_by" type="date" v-model="form.required_by" class="[&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert [&::-webkit-calendar-picker-indicator]:sepia [&::-webkit-calendar-picker-indicator]:saturate-[500%] [&::-webkit-calendar-picker-indicator]:hue-rotate-[180deg] [&::-webkit-calendar-picker-indicator]:brightness-[0.8]" />
+                        <InputError :message="form.errors.required_by" />
+                    </div>
+                    <div class="space-y-2">
+                        <Label for="required_reason">Required Reason</Label>
+                        <Input id="required_reason" v-model="form.required_reason" />
+                        <InputError :message="form.errors.required_reason" />
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <Label for="submitted">Submitted</Label>
+                        <Input id="submitted" v-model="form.submitted" />
+                        <InputError :message="form.errors.submitted" />
+                    </div>
+                    <div class="space-y-2">
+                        <Label for="billed">Billed</Label>
+                        <Input id="billed" v-model="form.billed" />
+                        <InputError :message="form.errors.billed" />
+                    </div>
+                </div>
+
+                <div class="space-y-4 border p-3 rounded-md">
+                    <div class="flex items-center space-x-2">
+                        <input
+                            id="clear_list"
+                            v-model="form.clear_list"
+                            type="checkbox"
+                            class="h-4 w-4 rounded border-gray-300"
+                        />
+                        <Label for="clear_list">Clear List</Label>
+                    </div>
                 </div>
             </div>
 
@@ -273,8 +305,14 @@ const submit = () => {
                 </div>
 
                 <div class="space-y-2">
-                    <Label for="backflow_location">Location</Label>
+                    <Label for="backflow_location">Backflow Device Location</Label>
                     <Input id="backflow_location" v-model="form.backflow_location" />
+                </div>
+
+                <div class="space-y-2">
+                    <Label for="controller_location">Controller Location</Label>
+                    <Input id="controller_location" v-model="form.controller_location" />
+                    <InputError :message="form.errors.controller_location" />
                 </div>
 
                 <div class="space-y-4 border p-3 rounded-md">
@@ -552,55 +590,6 @@ const submit = () => {
                 class="flex min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             />
             <InputError :message="form.errors.irrig_notes" />
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="space-y-4">
-                <h3 class="text-sm font-semibold border-b pb-1 uppercase tracking-wider text-muted-foreground">Scheduling</h3>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="space-y-2">
-                        <Label for="required_by">Required By</Label>
-                        <Input id="required_by" type="date" v-model="form.required_by" class="[&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert [&::-webkit-calendar-picker-indicator]:sepia [&::-webkit-calendar-picker-indicator]:saturate-[500%] [&::-webkit-calendar-picker-indicator]:hue-rotate-[180deg] [&::-webkit-calendar-picker-indicator]:brightness-[0.8]" />
-                        <InputError :message="form.errors.required_by" />
-                    </div>
-                </div>
-
-                <div class="space-y-2">
-                    <Label for="required_reason">Required Reason</Label>
-                    <Input id="required_reason" v-model="form.required_reason" />
-                    <InputError :message="form.errors.required_reason" />
-                </div>
-
-                <div class="space-y-4 border p-3 rounded-md">
-                    <div class="flex items-center space-x-2">
-                        <input
-                            id="clear_list"
-                            v-model="form.clear_list"
-                            type="checkbox"
-                            class="h-4 w-4 rounded border-gray-300"
-                        />
-                        <Label for="clear_list">Clear List</Label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="space-y-4">
-                <h3 class="text-sm font-semibold border-b pb-1 uppercase tracking-wider text-muted-foreground">Billing</h3>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="space-y-2">
-                        <Label for="submitted">Submitted</Label>
-                        <Input id="submitted" v-model="form.submitted" />
-                        <InputError :message="form.errors.submitted" />
-                    </div>
-                    <div class="space-y-2">
-                        <Label for="billed">Billed</Label>
-                        <Input id="billed" v-model="form.billed" />
-                        <InputError :message="form.errors.billed" />
-                    </div>
-                </div>
-            </div>
         </div>
     </form>
 </template>
