@@ -369,12 +369,11 @@ const submit = () => {
                                     <button
                                         type="button"
                                         @click="form.pvb_ai_opened = null"
-                                        :class="[
-                                            'flex-1 px-2 py-1.5 text-xs rounded border transition-all',
-                                            form.pvb_ai_opened === null
-                                                ? 'bg-muted border-muted-foreground/30 font-medium'
-                                                : 'border-input hover:bg-muted/50'
-                                        ]"
+                                        :class="
+                                            form.pvb_ai_opened
+                                                ? 'flex-1 px-2 py-1.5 text-xs rounded border transition-all border-input hover:bg-muted/50'
+                                                : 'flex-1 px-2 py-1.5 text-xs rounded border transition-all bg-muted border-muted-foreground/30 font-medium'
+                                        "
                                     >
                                         Pending
                                     </button>
@@ -411,12 +410,11 @@ const submit = () => {
                                     <button
                                         type="button"
                                         @click="form.pvb_cv_held = null"
-                                        :class="[
-                                            'flex-1 px-2 py-1.5 text-xs rounded border transition-all',
-                                            form.pvb_cv_held === null
-                                                ? 'bg-muted border-muted-foreground/30 font-medium'
-                                                : 'border-input hover:bg-muted/50'
-                                        ]"
+                                        :class="
+                                            form.pvb_cv_held
+                                                ? 'flex-1 px-2 py-1.5 text-xs rounded border transition-all border-input hover:bg-muted/50'
+                                                : 'flex-1 px-2 py-1.5 text-xs rounded border transition-all bg-muted border-muted-foreground/30 font-medium'
+                                        "
                                     >
                                         Pending
                                     </button>
@@ -456,12 +454,11 @@ const submit = () => {
                                     <button
                                         type="button"
                                         @click="form.rp_cv1_held = null"
-                                        :class="[
-                                            'flex-1 px-2 py-1.5 text-xs rounded border transition-all',
-                                            form.rp_cv1_held === null
-                                                ? 'bg-muted border-muted-foreground/30 font-medium'
-                                                : 'border-input hover:bg-muted/50'
-                                        ]"
+                                        :class="
+                                            form.rp_cv1_held
+                                                ? 'flex-1 px-2 py-1.5 text-xs rounded border transition-all border-input hover:bg-muted/50'
+                                                : 'flex-1 px-2 py-1.5 text-xs rounded border transition-all bg-muted border-muted-foreground/30 font-medium'
+                                        "
                                     >
                                         Pending
                                     </button>
@@ -498,12 +495,11 @@ const submit = () => {
                                     <button
                                         type="button"
                                         @click="form.rp_cv2_held = null"
-                                        :class="[
-                                            'flex-1 px-2 py-1.5 text-xs rounded border transition-all',
-                                            form.rp_cv2_held === null
-                                                ? 'bg-muted border-muted-foreground/30 font-medium'
-                                                : 'border-input hover:bg-muted/50'
-                                        ]"
+                                        :class="
+                                            form.rp_cv2_held
+                                                ? 'flex-1 px-2 py-1.5 text-xs rounded border transition-all border-input hover:bg-muted/50'
+                                                : 'flex-1 px-2 py-1.5 text-xs rounded border transition-all bg-muted border-muted-foreground/30 font-medium'
+                                        "
                                     >
                                         Pending
                                     </button>
@@ -540,12 +536,11 @@ const submit = () => {
                                     <button
                                         type="button"
                                         @click="form.rp_rv_opened = null"
-                                        :class="[
-                                            'flex-1 px-2 py-1.5 text-xs rounded border transition-all',
-                                            form.rp_rv_opened === null
-                                                ? 'bg-muted border-muted-foreground/30 font-medium'
-                                                : 'border-input hover:bg-muted/50'
-                                        ]"
+                                        :class="
+                                            form.rp_rv_opened
+                                                ? 'flex-1 px-2 py-1.5 text-xs rounded border transition-all border-input hover:bg-muted/50'
+                                                : 'flex-1 px-2 py-1.5 text-xs rounded border transition-all bg-muted border-muted-foreground/30 font-medium'
+                                        "
                                     >
                                         Pending
                                     </button>
