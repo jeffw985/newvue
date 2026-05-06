@@ -46,6 +46,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('service-calendar', [App\Http\Controllers\ServiceCalendarController::class, 'index'])->name('service-calendar.index');
     Route::put('service-calendar/{schedule}', [App\Http\Controllers\ServiceCalendarController::class, 'updateEvent'])->name('service-calendar.update');
 
+    Route::get('service-schedules', [App\Http\Controllers\ServiceScheduleController::class, 'index'])->name('service-schedules.index');
+    Route::post('service-schedules', [App\Http\Controllers\ServiceScheduleController::class, 'store']);
+    Route::put('service-schedules/{schedule}', [App\Http\Controllers\ServiceScheduleController::class, 'update']);
+    Route::delete('service-schedules/{schedule}', [App\Http\Controllers\ServiceScheduleController::class, 'destroy']);
+
     Route::get('area-groups', [\App\Http\Controllers\AreaGroupController::class, 'index'])->name('area-groups.index');
     Route::post('area-groups', [\App\Http\Controllers\AreaGroupController::class, 'store'])->name('area-groups.store');
     Route::put('area-groups/{areaGroup}', [\App\Http\Controllers\AreaGroupController::class, 'update'])->name('area-groups.update');

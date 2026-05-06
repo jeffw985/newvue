@@ -23,6 +23,7 @@ export interface Customer {
     notes: string | null
     area_group_id: number | null
     xero_contact_id: string | null
+    areaGroup?: AreaGroup
     ledgers?: Ledger[]
     irrigations?: Irrigation[]
     maintenances?: Maintenance[]
@@ -63,21 +64,26 @@ export interface Irrigation {
     controller_location: string | null
     irrig_notes: string | null
     pvb_ai: string | null
-    pvb_ai_opened: boolean
+    pvb_ai_opened: string | null
     pvb_cv: string | null
-    pvb_cv_held: boolean
+    pvb_cv_held: string | null
     rp_cv1: string | null
-    rp_cv1_held: boolean
+    rp_cv1_held: string | null
     rp_cv2: string | null
-    rp_cv2_held: boolean
+    rp_cv2_held: string | null
     rp_rv: string | null
-    rp_rv_opened: boolean
+    rp_rv_opened: string | null
     site_id: string | null
     turn_on: boolean
     turn_on_date: string | null
     site_address: string | null
     sequence_order: number | null
     subdivision: string | null
+    required_by: string | null
+    required_reason: string | null
+    submitted: string | null
+    billed: string | null
+    clear_list: boolean
     customer?: Customer
 }
 
@@ -134,6 +140,7 @@ export interface ServiceSchedule {
     crew_status: string | null
     site_address: string | null
     customer?: Customer
+    maintenance?: Maintenance
 }
 
 export interface Sheet {

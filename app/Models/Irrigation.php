@@ -27,11 +27,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $pvb_ai
  * @property string|null $pvb_ai_opened
  * @property string|null $pvb_cv
- * @property bool $pvb_cv_held
+ * @property string|null $pvb_cv_held
  * @property string|null $rp_cv1
- * @property bool $rp_cv1_held
+ * @property string|null $rp_cv1_held
  * @property string|null $rp_cv2
- * @property bool $rp_cv2_held
+ * @property string|null $rp_cv2_held
  * @property string|null $rp_rv
  * @property string|null $rp_rv_opened
  * @property string|null $site_id
@@ -42,12 +42,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $subdivision
  * @property Carbon|null $required_by
  * @property string|null $required_reason
- * @property bool|null $paid
- * @property string|null $paid_amount
- * @property string|null $payment_type
  * @property string|null $submitted
  * @property string|null $billed
- * @property bool $prepayment_waived
  * @property bool $clear_list
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -71,8 +67,6 @@ class Irrigation extends Model
         'turn_on_date' => 'date',
         'sequence_order' => 'integer',
         'required_by' => 'date',
-        'paid_amount' => 'decimal:2',
-        'prepayment_waived' => 'boolean',
         'clear_list' => 'boolean',
         'deleted_at' => 'datetime',
         'pvb_ai_opened' => 'string',
@@ -81,7 +75,6 @@ class Irrigation extends Model
         'rp_cv1_held' => 'string',
         'rp_cv2_held' => 'string',
         'backflow_test_pass' => 'string',
-        'paid' => 'string',
     ];
 
     protected $fillable = [
@@ -116,12 +109,8 @@ class Irrigation extends Model
         'subdivision',
         'required_by',
         'required_reason',
-        'paid',
-        'paid_amount',
-        'payment_type',
         'submitted',
         'billed',
-        'prepayment_waived',
         'clear_list',
     ];
 

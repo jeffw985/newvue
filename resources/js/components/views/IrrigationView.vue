@@ -187,29 +187,7 @@ const displayValue = (value: any): string => {
             </div>
 
             <div class="space-y-4">
-                <h3 class="text-sm font-semibold border-b pb-1 uppercase tracking-wider text-muted-foreground">Payment & Billing</h3>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="space-y-1">
-                        <Label class="text-xs text-muted-foreground uppercase">Paid</Label>
-                        <p class="text-sm">
-                            <Badge :variant="irrigation.paid ? 'outline-green' : 'outline-red'">{{ irrigation.paid ? 'Yes' : 'No' }}</Badge>
-                        </p>
-                    </div>
-                    <div class="space-y-1">
-                        <Label class="text-xs text-muted-foreground uppercase">Amount</Label>
-                        <p class="text-sm">{{ irrigation.paid_amount ? `$${irrigation.paid_amount}` : 'N/A' }}</p>
-                    </div>
-                </div>
-                <div class="space-y-1">
-                    <Label class="text-xs text-muted-foreground uppercase">Payment Type</Label>
-                    <p class="text-sm">{{ displayValue(irrigation.payment_type) }}</p>
-                </div>
-                <div class="space-y-1">
-                    <Label class="text-xs text-muted-foreground uppercase">Prepayment Waived</Label>
-                    <p class="text-sm">
-                        <Badge :variant="irrigation.prepayment_waived ? 'outline-blue' : 'outline-gray'">{{ irrigation.prepayment_waived ? 'Yes' : 'No' }}</Badge>
-                    </p>
-                </div>
+                <h3 class="text-sm font-semibold border-b pb-1 uppercase tracking-wider text-muted-foreground">Billing</h3>
                 <div class="grid grid-cols-2 gap-4">
                     <div class="space-y-1">
                         <Label class="text-xs text-muted-foreground uppercase">Submitted</Label>

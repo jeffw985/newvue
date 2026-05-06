@@ -53,26 +53,22 @@ const form = useForm({
     backflow_test_pass: props.irrigation?.backflow_test_pass ?? '',
     backflow_test_date: formatDateForInput(props.irrigation?.backflow_test_date),
     pvb_ai: props.irrigation?.pvb_ai ?? '',
-    pvb_ai_opened: props.irrigation?.pvb_ai_opened ?? '',
+    pvb_ai_opened: props.irrigation?.pvb_ai_opened ?? null,
     pvb_cv: props.irrigation?.pvb_cv ?? '',
-    pvb_cv_held: !!props.irrigation?.pvb_cv_held,
+    pvb_cv_held: props.irrigation?.pvb_cv_held ?? null,
     rp_cv1: props.irrigation?.rp_cv1 ?? '',
-    rp_cv1_held: !!props.irrigation?.rp_cv1_held,
+    rp_cv1_held: props.irrigation?.rp_cv1_held ?? null,
     rp_cv2: props.irrigation?.rp_cv2 ?? '',
-    rp_cv2_held: !!props.irrigation?.rp_cv2_held,
+    rp_cv2_held: props.irrigation?.rp_cv2_held ?? null,
     rp_rv: props.irrigation?.rp_rv ?? '',
-    rp_rv_opened: props.irrigation?.rp_rv_opened ?? '',
+    rp_rv_opened: props.irrigation?.rp_rv_opened ?? null,
     site_id: props.irrigation?.site_id ?? '',
     sequence_order: props.irrigation?.sequence_order ?? undefined,
     irrig_notes: props.irrigation?.irrig_notes ?? '',
     required_by: formatDateForInput(props.irrigation?.required_by),
     required_reason: props.irrigation?.required_reason ?? '',
-    paid: !!props.irrigation?.paid,
-    paid_amount: props.irrigation?.paid_amount ?? '',
-    payment_type: props.irrigation?.payment_type ?? '',
     submitted: props.irrigation?.submitted ?? '',
     billed: props.irrigation?.billed ?? '',
-    prepayment_waived: !!props.irrigation?.prepayment_waived,
     clear_list: !!props.irrigation?.clear_list,
 })
 
@@ -235,7 +231,44 @@ const submit = () => {
                     </div>
                     <div class="space-y-2">
                         <Label for="backflow_type">Type</Label>
-                        <Input id="backflow_type" v-model="form.backflow_type" />
+                        <div class="flex gap-2">
+                            <button
+                                type="button"
+                                @click="form.backflow_type = ''"
+                                :class="[
+                                    'flex-1 px-3 py-2 text-sm rounded border transition-all',
+                                    form.backflow_type === '' || form.backflow_type === null
+                                        ? 'bg-muted border-muted-foreground/30 font-medium'
+                                        : 'border-input hover:bg-muted/50'
+                                ]"
+                            >
+                                None
+                            </button>
+                            <button
+                                type="button"
+                                @click="form.backflow_type = 'PVB'"
+                                :class="[
+                                    'flex-1 px-3 py-2 text-sm rounded border transition-all',
+                                    form.backflow_type === 'PVB'
+                                        ? 'bg-blue-50 border-blue-600 text-blue-700 font-medium'
+                                        : 'border-input hover:bg-muted/50'
+                                ]"
+                            >
+                                PVB
+                            </button>
+                            <button
+                                type="button"
+                                @click="form.backflow_type = 'RP'"
+                                :class="[
+                                    'flex-1 px-3 py-2 text-sm rounded border transition-all',
+                                    form.backflow_type === 'RP'
+                                        ? 'bg-orange-50 border-orange-600 text-orange-700 font-medium'
+                                        : 'border-input hover:bg-muted/50'
+                                ]"
+                            >
+                                RP
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -247,73 +280,262 @@ const submit = () => {
                 <div class="space-y-4 border p-3 rounded-md">
                     <div class="space-y-2">
                         <Label for="backflow_test_pass">Test Result</Label>
-                        <select
-                            id="backflow_test_pass"
-                            v-model="form.backflow_test_pass"
-                            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                        >
-                            <option value="">Not Tested</option>
-                            <option value="Pass">Pass</option>
-                            <option value="Fail">Fail</option>
-                        </select>
+                        <div class="flex gap-2">
+                            <button
+                                type="button"
+                                @click="form.backflow_test_pass = ''"
+                                :class="[
+                                    'flex-1 px-3 py-2 text-sm rounded border transition-all',
+                                    form.backflow_test_pass === '' || form.backflow_test_pass === null
+                                        ? 'bg-muted border-muted-foreground/30 font-medium'
+                                        : 'border-input hover:bg-muted/50'
+                                ]"
+                            >
+                                Not Tested
+                            </button>
+                            <button
+                                type="button"
+                                @click="form.backflow_test_pass = 'Pass'"
+                                :class="[
+                                    'flex-1 px-3 py-2 text-sm rounded border-2 transition-all',
+                                    form.backflow_test_pass === 'Pass'
+                                        ? 'border-green-600 text-green-700 font-medium'
+                                        : 'border-input hover:bg-muted/50'
+                                ]"
+                            >
+                                Pass
+                            </button>
+                            <button
+                                type="button"
+                                @click="form.backflow_test_pass = 'Fail'"
+                                :class="[
+                                    'flex-1 px-3 py-2 text-sm rounded border-2 transition-all',
+                                    form.backflow_test_pass === 'Fail'
+                                        ? 'border-red-600 text-red-700 font-medium'
+                                        : 'border-input hover:bg-muted/50'
+                                ]"
+                            >
+                                Fail
+                            </button>
+                        </div>
                         <InputError :message="form.errors.backflow_test_pass" />
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4 pt-2 border-t">
-                        <div class="space-y-4">
+                    <div v-if="form.backflow_type === 'PVB' || form.backflow_type === 'RP'" class="grid grid-cols-2 gap-4 pt-2 border-t">
+                        <div v-if="form.backflow_type === 'PVB'" class="space-y-4">
                             <h4 class="text-xs font-bold uppercase">PVB</h4>
                             <div class="space-y-2">
                                 <Label for="pvb_ai">Air Inlet</Label>
                                 <Input id="pvb_ai" v-model="form.pvb_ai" placeholder="Value" />
-                                <select
-                                    id="pvb_ai_opened"
-                                    v-model="form.pvb_ai_opened"
-                                    class="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-xs ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                                >
-                                    <option value="">Not Tested</option>
-                                    <option value="Opened">Opened</option>
-                                    <option value="Did Not Open">Did Not Open</option>
-                                </select>
+                                <div class="flex gap-1 mt-2">
+                                    <button
+                                        type="button"
+                                        @click="form.pvb_ai_opened = null"
+                                        :class="[
+                                            'flex-1 px-2 py-1.5 text-xs rounded border transition-all',
+                                            form.pvb_ai_opened === null
+                                                ? 'bg-muted border-muted-foreground/30 font-medium'
+                                                : 'border-input hover:bg-muted/50'
+                                        ]"
+                                    >
+                                        Pending
+                                    </button>
+                                    <button
+                                        type="button"
+                                        @click="form.pvb_ai_opened = 'Opened'"
+                                        :class="[
+                                            'flex-1 px-2 py-1.5 text-xs rounded border transition-all',
+                                            form.pvb_ai_opened === 'Opened'
+                                                ? 'bg-green-50 border-green-600 text-green-700 font-medium'
+                                                : 'border-input hover:bg-muted/50'
+                                        ]"
+                                    >
+                                        Opened
+                                    </button>
+                                    <button
+                                        type="button"
+                                        @click="form.pvb_ai_opened = 'Did Not Open'"
+                                        :class="[
+                                            'flex-1 px-2 py-1.5 text-xs rounded border transition-all',
+                                            form.pvb_ai_opened === 'Did Not Open'
+                                                ? 'bg-red-50 border-red-600 text-red-700 font-medium'
+                                                : 'border-input hover:bg-muted/50'
+                                        ]"
+                                    >
+                                        Not Opened
+                                    </button>
+                                </div>
                             </div>
                             <div class="space-y-2">
                                 <Label for="pvb_cv">Check Valve</Label>
                                 <Input id="pvb_cv" v-model="form.pvb_cv" placeholder="Value" />
-                                <div class="flex items-center space-x-2">
-                                    <input id="pvb_cv_held" v-model="form.pvb_cv_held" type="checkbox" class="h-3 w-3 rounded" />
-                                    <Label for="pvb_cv_held" class="text-xs">Held</Label>
+                                <div class="flex gap-1 mt-2">
+                                    <button
+                                        type="button"
+                                        @click="form.pvb_cv_held = null"
+                                        :class="[
+                                            'flex-1 px-2 py-1.5 text-xs rounded border transition-all',
+                                            form.pvb_cv_held === null
+                                                ? 'bg-muted border-muted-foreground/30 font-medium'
+                                                : 'border-input hover:bg-muted/50'
+                                        ]"
+                                    >
+                                        Pending
+                                    </button>
+                                    <button
+                                        type="button"
+                                        @click="form.pvb_cv_held = 'Held'"
+                                        :class="[
+                                            'flex-1 px-2 py-1.5 text-xs rounded border transition-all',
+                                            form.pvb_cv_held === 'Held'
+                                                ? 'bg-green-50 border-green-600 text-green-700 font-medium'
+                                                : 'border-input hover:bg-muted/50'
+                                        ]"
+                                    >
+                                        Held
+                                    </button>
+                                    <button
+                                        type="button"
+                                        @click="form.pvb_cv_held = 'Not Held'"
+                                        :class="[
+                                            'flex-1 px-2 py-1.5 text-xs rounded border transition-all',
+                                            form.pvb_cv_held === 'Not Held'
+                                                ? 'bg-red-50 border-red-600 text-red-700 font-medium'
+                                                : 'border-input hover:bg-muted/50'
+                                        ]"
+                                    >
+                                        Not Held
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                        <div class="space-y-4">
+                        <div v-if="form.backflow_type === 'RP'" class="space-y-4">
                             <h4 class="text-xs font-bold uppercase">RP</h4>
                             <div class="space-y-2">
                                 <Label for="rp_cv1">CV 1</Label>
                                 <Input id="rp_cv1" v-model="form.rp_cv1" placeholder="Value" />
-                                <div class="flex items-center space-x-2">
-                                    <input id="rp_cv1_held" v-model="form.rp_cv1_held" type="checkbox" class="h-3 w-3 rounded" />
-                                    <Label for="rp_cv1_held" class="text-xs">Held</Label>
+                                <div class="flex gap-1 mt-2">
+                                    <button
+                                        type="button"
+                                        @click="form.rp_cv1_held = null"
+                                        :class="[
+                                            'flex-1 px-2 py-1.5 text-xs rounded border transition-all',
+                                            form.rp_cv1_held === null
+                                                ? 'bg-muted border-muted-foreground/30 font-medium'
+                                                : 'border-input hover:bg-muted/50'
+                                        ]"
+                                    >
+                                        Pending
+                                    </button>
+                                    <button
+                                        type="button"
+                                        @click="form.rp_cv1_held = 'Held'"
+                                        :class="[
+                                            'flex-1 px-2 py-1.5 text-xs rounded border transition-all',
+                                            form.rp_cv1_held === 'Held'
+                                                ? 'bg-green-50 border-green-600 text-green-700 font-medium'
+                                                : 'border-input hover:bg-muted/50'
+                                        ]"
+                                    >
+                                        Held
+                                    </button>
+                                    <button
+                                        type="button"
+                                        @click="form.rp_cv1_held = 'Not Held'"
+                                        :class="[
+                                            'flex-1 px-2 py-1.5 text-xs rounded border transition-all',
+                                            form.rp_cv1_held === 'Not Held'
+                                                ? 'bg-red-50 border-red-600 text-red-700 font-medium'
+                                                : 'border-input hover:bg-muted/50'
+                                        ]"
+                                    >
+                                        Not Held
+                                    </button>
                                 </div>
                             </div>
                             <div class="space-y-2">
                                 <Label for="rp_cv2">CV 2</Label>
                                 <Input id="rp_cv2" v-model="form.rp_cv2" placeholder="Value" />
-                                <div class="flex items-center space-x-2">
-                                    <input id="rp_cv2_held" v-model="form.rp_cv2_held" type="checkbox" class="h-3 w-3 rounded" />
-                                    <Label for="rp_cv2_held" class="text-xs">Held</Label>
+                                <div class="flex gap-1 mt-2">
+                                    <button
+                                        type="button"
+                                        @click="form.rp_cv2_held = null"
+                                        :class="[
+                                            'flex-1 px-2 py-1.5 text-xs rounded border transition-all',
+                                            form.rp_cv2_held === null
+                                                ? 'bg-muted border-muted-foreground/30 font-medium'
+                                                : 'border-input hover:bg-muted/50'
+                                        ]"
+                                    >
+                                        Pending
+                                    </button>
+                                    <button
+                                        type="button"
+                                        @click="form.rp_cv2_held = 'Held'"
+                                        :class="[
+                                            'flex-1 px-2 py-1.5 text-xs rounded border transition-all',
+                                            form.rp_cv2_held === 'Held'
+                                                ? 'bg-green-50 border-green-600 text-green-700 font-medium'
+                                                : 'border-input hover:bg-muted/50'
+                                        ]"
+                                    >
+                                        Held
+                                    </button>
+                                    <button
+                                        type="button"
+                                        @click="form.rp_cv2_held = 'Not Held'"
+                                        :class="[
+                                            'flex-1 px-2 py-1.5 text-xs rounded border transition-all',
+                                            form.rp_cv2_held === 'Not Held'
+                                                ? 'bg-red-50 border-red-600 text-red-700 font-medium'
+                                                : 'border-input hover:bg-muted/50'
+                                        ]"
+                                    >
+                                        Not Held
+                                    </button>
                                 </div>
                             </div>
                             <div class="space-y-2">
                                 <Label for="rp_rv">RV</Label>
                                 <Input id="rp_rv" v-model="form.rp_rv" placeholder="Value" />
-                                <select
-                                    id="rp_rv_opened"
-                                    v-model="form.rp_rv_opened"
-                                    class="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-xs ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                                >
-                                    <option value="">Not Tested</option>
-                                    <option value="Opened">Opened</option>
-                                    <option value="Did Not Open">Did Not Open</option>
-                                </select>
+                                <div class="flex gap-1 mt-2">
+                                    <button
+                                        type="button"
+                                        @click="form.rp_rv_opened = null"
+                                        :class="[
+                                            'flex-1 px-2 py-1.5 text-xs rounded border transition-all',
+                                            form.rp_rv_opened === null
+                                                ? 'bg-muted border-muted-foreground/30 font-medium'
+                                                : 'border-input hover:bg-muted/50'
+                                        ]"
+                                    >
+                                        Pending
+                                    </button>
+                                    <button
+                                        type="button"
+                                        @click="form.rp_rv_opened = 'Opened'"
+                                        :class="[
+                                            'flex-1 px-2 py-1.5 text-xs rounded border transition-all',
+                                            form.rp_rv_opened === 'Opened'
+                                                ? 'bg-green-50 border-green-600 text-green-700 font-medium'
+                                                : 'border-input hover:bg-muted/50'
+                                        ]"
+                                    >
+                                        Opened
+                                    </button>
+                                    <button
+                                        type="button"
+                                        @click="form.rp_rv_opened = 'Did Not Open'"
+                                        :class="[
+                                            'flex-1 px-2 py-1.5 text-xs rounded border transition-all',
+                                            form.rp_rv_opened === 'Did Not Open'
+                                                ? 'bg-red-50 border-red-600 text-red-700 font-medium'
+                                                : 'border-input hover:bg-muted/50'
+                                        ]"
+                                    >
+                                        Not Opened
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -364,44 +586,7 @@ const submit = () => {
             </div>
 
             <div class="space-y-4">
-                <h3 class="text-sm font-semibold border-b pb-1 uppercase tracking-wider text-muted-foreground">Payment & Billing</h3>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="space-y-2">
-                        <div class="flex items-center space-x-2">
-                            <input
-                                id="paid"
-                                v-model="form.paid"
-                                type="checkbox"
-                                class="h-4 w-4 rounded border-gray-300"
-                            />
-                            <Label for="paid">Paid</Label>
-                        </div>
-                    </div>
-                    <div class="space-y-2">
-                        <Label for="paid_amount">Amount</Label>
-                        <Input id="paid_amount" type="number" step="0.01" v-model="form.paid_amount" :disabled="!form.paid" />
-                        <InputError :message="form.errors.paid_amount" />
-                    </div>
-                </div>
-
-                <div class="space-y-2">
-                    <Label for="payment_type">Payment Type</Label>
-                    <Input id="payment_type" v-model="form.payment_type" :disabled="!form.paid" />
-                    <InputError :message="form.errors.payment_type" />
-                </div>
-
-                <div class="space-y-4 border p-3 rounded-md">
-                    <div class="flex items-center space-x-2">
-                        <input
-                            id="prepayment_waived"
-                            v-model="form.prepayment_waived"
-                            type="checkbox"
-                            class="h-4 w-4 rounded border-gray-300"
-                        />
-                        <Label for="prepayment_waived">Prepayment Waived</Label>
-                    </div>
-                </div>
+                <h3 class="text-sm font-semibold border-b pb-1 uppercase tracking-wider text-muted-foreground">Billing</h3>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div class="space-y-2">

@@ -404,7 +404,7 @@ const handleEditSuccess = () => {
 
         <!-- Edit Dialog -->
         <Dialog v-model:open="isEditDialogOpen">
-            <DialogContent class="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogContent class="sm:max-w-5xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>Edit Irrigation Record</DialogTitle>
                     <DialogDescription>

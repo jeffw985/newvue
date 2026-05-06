@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, BookText, Calendar, Droplets, FileSpreadsheet, Folder, LayoutGrid, MapPin, Smartphone, UserSearch, Users } from 'lucide-vue-next';
+import { BookOpen, BookText, Calendar, CalendarDays, Droplets, FileSpreadsheet, Folder, LayoutGrid, MapPin, Smartphone, UserSearch, Users } from 'lucide-vue-next';
 
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -49,6 +49,11 @@ const mainNavItems: NavItem[] = [
         title: 'Service Calendar',
         href: '/service-calendar',
         icon: Calendar,
+    },
+    {
+        title: 'Service Schedule',
+        href: '/service-schedules',
+        icon: CalendarDays,
     },
     {
         title: 'Area Groups',
