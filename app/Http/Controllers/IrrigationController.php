@@ -23,6 +23,9 @@ class IrrigationController extends Controller
         $submittedFilter = $request->input('submitted');
         $billedFilter = $request->input('billed');
         $completeFilter = $request->input('complete');
+        $turnOnFilter = $request->input('turn_on');
+        $backflowTestingFilter = $request->input('backflow_testing');
+        $blowoutFilter = $request->input('blowout');
 
         $irrigations = Irrigation::query()
             ->with('customer:id,full_name')
@@ -64,6 +67,38 @@ class IrrigationController extends Controller
                     $query->where('clear_list', false);
                 }
             })
+            ->when(
+                $turnOnFilter !== null || $backflowTestingFilter !== null || $blowoutFilter !== null,
+                function ($query) use ($turnOnFilter, $backflowTestingFilter, $blowoutFilter) {
+                    $query->where(function ($q) use ($turnOnFilter, $backflowTestingFilter, $blowoutFilter) {
+                        $hasCondition = false;
+
+                        if ($turnOnFilter === 'yes') {
+                            $q->orWhere('turn_on', true);
+                            $hasCondition = true;
+                        } elseif ($turnOnFilter === 'no') {
+                            $q->orWhere('turn_on', false);
+                            $hasCondition = true;
+                        }
+
+                        if ($backflowTestingFilter === 'yes') {
+                            $q->orWhere('backflow_testing', true);
+                            $hasCondition = true;
+                        } elseif ($backflowTestingFilter === 'no') {
+                            $q->orWhere('backflow_testing', false);
+                            $hasCondition = true;
+                        }
+
+                        if ($blowoutFilter === 'yes') {
+                            $q->orWhere('blowout', true);
+                            $hasCondition = true;
+                        } elseif ($blowoutFilter === 'no') {
+                            $q->orWhere('blowout', false);
+                            $hasCondition = true;
+                        }
+                    });
+                }
+            )
             ->orderBy('turn_on_date', 'asc')
             ->get();
 
@@ -75,6 +110,9 @@ class IrrigationController extends Controller
                 'submitted' => $submittedFilter,
                 'billed' => $billedFilter,
                 'complete' => $completeFilter,
+                'turn_on' => $turnOnFilter,
+                'backflow_testing' => $backflowTestingFilter,
+                'blowout' => $blowoutFilter,
             ],
         ]);
     }

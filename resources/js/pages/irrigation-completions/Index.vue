@@ -43,6 +43,9 @@ const props = defineProps<{
         submitted?: string
         billed?: string
         complete?: string
+        turn_on?: string
+        backflow_testing?: string
+        blowout?: string
     }
 }>()
 
@@ -62,6 +65,9 @@ const resultFilter = ref(props.filters.result || '')
 const submittedFilter = ref(props.filters.submitted || '')
 const billedFilter = ref(props.filters.billed || '')
 const completeFilter = ref(props.filters.complete || '')
+const turnOnFilter = ref(props.filters.turn_on || '')
+const backflowTestingFilter = ref(props.filters.backflow_testing || '')
+const blowoutFilter = ref(props.filters.blowout || '')
 const isEditDialogOpen = ref(false)
 const editingIrrigation = ref<Irrigation | null>(null)
 
@@ -74,6 +80,9 @@ const applyFilters = () => {
         submitted: submittedFilter.value || undefined,
         billed: billedFilter.value || undefined,
         complete: completeFilter.value || undefined,
+        turn_on: turnOnFilter.value || undefined,
+        backflow_testing: backflowTestingFilter.value || undefined,
+        blowout: blowoutFilter.value || undefined,
     }, {
         preserveState: true,
         preserveScroll: true,
@@ -103,6 +112,18 @@ watch(billedFilter, () => {
 })
 
 watch(completeFilter, () => {
+    applyFilters()
+})
+
+watch(turnOnFilter, () => {
+    applyFilters()
+})
+
+watch(backflowTestingFilter, () => {
+    applyFilters()
+})
+
+watch(blowoutFilter, () => {
     applyFilters()
 })
 
@@ -247,6 +268,42 @@ const handleEditSuccess = () => {
                                 <option value="">All</option>
                                 <option value="complete">Complete</option>
                                 <option value="incomplete">Incomplete</option>
+                            </select>
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <label class="text-sm font-medium">Turn On:</label>
+                            <select
+                                v-model="turnOnFilter"
+                                class="border border-border rounded-md px-3 py-2 text-sm bg-background"
+                            >
+                                <option value="">All</option>
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <label class="text-sm font-medium">Backflow Testing:</label>
+                            <select
+                                v-model="backflowTestingFilter"
+                                class="border border-border rounded-md px-3 py-2 text-sm bg-background"
+                            >
+                                <option value="">All</option>
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <label class="text-sm font-medium">Blowout:</label>
+                            <select
+                                v-model="blowoutFilter"
+                                class="border border-border rounded-md px-3 py-2 text-sm bg-background"
+                            >
+                                <option value="">All</option>
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
                             </select>
                         </div>
                     </div>
