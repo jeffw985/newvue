@@ -46,6 +46,7 @@ const props = defineProps<{
         turn_on?: string
         backflow_testing?: string
         blowout?: string
+        backflow_type?: string
     }
 }>()
 
@@ -68,6 +69,7 @@ const completeFilter = ref(props.filters.complete || '')
 const turnOnFilter = ref(props.filters.turn_on || '')
 const backflowTestingFilter = ref(props.filters.backflow_testing || '')
 const blowoutFilter = ref(props.filters.blowout || '')
+const backflowTypeFilter = ref(props.filters.backflow_type || '')
 const isEditDialogOpen = ref(false)
 const editingIrrigation = ref<Irrigation | null>(null)
 
@@ -83,6 +85,7 @@ const applyFilters = () => {
         turn_on: turnOnFilter.value || undefined,
         backflow_testing: backflowTestingFilter.value || undefined,
         blowout: blowoutFilter.value || undefined,
+        backflow_type: backflowTypeFilter.value || undefined,
     }, {
         preserveState: true,
         preserveScroll: true,
@@ -124,6 +127,10 @@ watch(backflowTestingFilter, () => {
 })
 
 watch(blowoutFilter, () => {
+    applyFilters()
+})
+
+watch(backflowTypeFilter, () => {
     applyFilters()
 })
 
@@ -304,6 +311,18 @@ const handleEditSuccess = () => {
                                 <option value="">All</option>
                                 <option value="yes">Yes</option>
                                 <option value="no">No</option>
+                            </select>
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <label class="text-sm font-medium">Backflow Type:</label>
+                            <select
+                                v-model="backflowTypeFilter"
+                                class="border border-border rounded-md px-3 py-2 text-sm bg-background"
+                            >
+                                <option value="">All</option>
+                                <option value="PVB">PVB</option>
+                                <option value="RP">RP</option>
                             </select>
                         </div>
                     </div>
