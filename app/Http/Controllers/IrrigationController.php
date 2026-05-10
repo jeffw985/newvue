@@ -68,32 +68,27 @@ class IrrigationController extends Controller
                     $query->where('clear_list', false);
                 }
             })
-            ->when(
-                ($turnOnFilter !== null && $turnOnFilter !== '')
-                || ($backflowTestingFilter !== null && $backflowTestingFilter !== '')
-                || ($blowoutFilter !== null && $blowoutFilter !== ''),
-                function ($query) use ($turnOnFilter, $backflowTestingFilter, $blowoutFilter) {
-                    $query->where(function ($q) use ($turnOnFilter, $backflowTestingFilter, $blowoutFilter) {
-                        if ($turnOnFilter === 'yes') {
-                            $q->orWhere('turn_on', true);
-                        } elseif ($turnOnFilter === 'no') {
-                            $q->orWhere('turn_on', false);
-                        }
-
-                        if ($backflowTestingFilter === 'yes') {
-                            $q->orWhere('backflow_testing', true);
-                        } elseif ($backflowTestingFilter === 'no') {
-                            $q->orWhere('backflow_testing', false);
-                        }
-
-                        if ($blowoutFilter === 'yes') {
-                            $q->orWhere('blowout', true);
-                        } elseif ($blowoutFilter === 'no') {
-                            $q->orWhere('blowout', false);
-                        }
-                    });
+            ->when($turnOnFilter !== null && $turnOnFilter !== '', function ($query) use ($turnOnFilter) {
+                if ($turnOnFilter === 'yes') {
+                    $query->where('turn_on', true);
+                } elseif ($turnOnFilter === 'no') {
+                    $query->where('turn_on', false);
                 }
-            )
+            })
+            ->when($backflowTestingFilter !== null && $backflowTestingFilter !== '', function ($query) use ($backflowTestingFilter) {
+                if ($backflowTestingFilter === 'yes') {
+                    $query->where('backflow_testing', true);
+                } elseif ($backflowTestingFilter === 'no') {
+                    $query->where('backflow_testing', false);
+                }
+            })
+            ->when($blowoutFilter !== null && $blowoutFilter !== '', function ($query) use ($blowoutFilter) {
+                if ($blowoutFilter === 'yes') {
+                    $query->where('blowout', true);
+                } elseif ($blowoutFilter === 'no') {
+                    $query->where('blowout', false);
+                }
+            })
             ->when($backflowTypeFilter !== null, function ($query) use ($backflowTypeFilter) {
                 $query->where('backflow_type', $backflowTypeFilter);
             })
