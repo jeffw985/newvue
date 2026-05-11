@@ -366,10 +366,42 @@ const displayValue = (value: string | null | undefined): string => {
     font-weight: 400;
 }
 
+/* Current day highlighting */
+/* Month view - today's cell */
+.calendar-wrapper :deep(.fc-day-today) {
+    background-color: rgba(59, 130, 246, 0.08) !important;
+}
+
+/* Week/Day view - today's entire column */
+.calendar-wrapper :deep(.fc-timegrid-col.fc-day-today) {
+    background-color: rgba(59, 130, 246, 0.05) !important;
+}
+
+/* Week/Day view - today's date header at top */
+.calendar-wrapper :deep(.fc-col-header-cell.fc-day-today) {
+    background-color: rgba(59, 130, 246, 0.25) !important;
+}
+
 /* Dark mode support */
 .dark .calendar-wrapper :deep(.fc) {
     --fc-border-color: hsl(0 0% 16.08%);
     --fc-today-bg-color: hsl(var(--accent));
+}
+
+/* Current day highlighting - dark mode */
+/* Month view - today's cell */
+.dark .calendar-wrapper :deep(.fc-day-today) {
+    background-color: rgba(59, 130, 246, 0.15) !important;
+}
+
+/* Week/Day view - today's entire column */
+.dark .calendar-wrapper :deep(.fc-timegrid-col.fc-day-today) {
+    background-color: rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Week/Day view - today's date header at top */
+.dark .calendar-wrapper :deep(.fc-col-header-cell.fc-day-today) {
+    background-color: rgba(59, 130, 246, 0.35) !important;
 }
 
 /* Dark mode - toolbar buttons */

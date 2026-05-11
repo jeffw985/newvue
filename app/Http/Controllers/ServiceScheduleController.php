@@ -18,10 +18,15 @@ class ServiceScheduleController extends Controller
     {
         $search = $request->input('search');
         $status = $request->input('status', 'Scheduled');
+        $unscheduled = $request->boolean('unscheduled');
 
         $schedules = ServiceSchedule::query()
             ->with(['customer:id,full_name,street', 'customer.areaGroup', 'maintenance'])
-            ->where('service_status', $status)
+            ->when($unscheduled, function ($query) {
+                $query->whereNull('start_time');
+            }, function ($query) use ($status) {
+                $query->where('service_status', $status);
+            })
             ->when($search, function ($query, $search) {
                 $searchTerm = strtolower($search);
                 $query->where(function ($q) use ($searchTerm) {
@@ -37,6 +42,7 @@ class ServiceScheduleController extends Controller
             'schedules' => $schedules,
             'search' => $search,
             'status' => $status,
+            'unscheduled' => $unscheduled,
         ]);
     }
 

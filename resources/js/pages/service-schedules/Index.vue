@@ -37,6 +37,7 @@ const props = defineProps<{
     schedules: ServiceSchedule[]
     search?: string
     status?: string
+    unscheduled?: boolean
 }>()
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -51,17 +52,24 @@ const breadcrumbs: BreadcrumbItem[] = [
 ]
 
 const search = ref(props.search || '')
-const status = ref(props.status || 'Scheduled')
+const activeTab = ref(props.unscheduled ? 'Unscheduled' : props.status || 'Scheduled')
 const isEditDialogOpen = ref(false)
 const editingSchedule = ref<ServiceSchedule | null>(null)
 
 let searchTimeout: ReturnType<typeof setTimeout> | null = null
 
 const applySearch = () => {
-    router.get('/service-schedules', {
+    const params: Record<string, string | boolean | undefined> = {
         search: search.value || undefined,
-        status: status.value,
-    }, {
+    }
+
+    if (activeTab.value === 'Unscheduled') {
+        params.unscheduled = true
+    } else {
+        params.status = activeTab.value
+    }
+
+    router.get('/service-schedules', params, {
         preserveState: true,
         preserveScroll: true,
         replace: true,
@@ -77,7 +85,7 @@ watch(search, () => {
     }, 300)
 })
 
-watch(status, () => {
+watch(activeTab, () => {
     applySearch()
 })
 
@@ -97,20 +105,20 @@ const formatDateTime = (date: string | null): string => {
     })
 }
 
-const getServiceRequestedColor = (service: string): 'green' | 'blue' | 'outline-amber' | 'outline' => {
+const getServiceRequestedColor = (service: string): 'outline-green' | 'outline-blue' | 'outline-amber' | 'outline' => {
     const vLower = service.toLowerCase()
 
     // Green badges
     if (vLower.includes('maintenance') || vLower.includes('mulch') ||
         vLower.includes('fall cleanup') || vLower.includes('plant replacement')) {
-        return 'green'
+        return 'outline-green'
     }
 
     // Blue badges
     if (vLower.includes('irrigation blowout') || vLower.includes('backflow') ||
         vLower.includes('spring start-up') || vLower.includes('spring startup') ||
         vLower.includes('irrigation service')) {
-        return 'blue'
+        return 'outline-blue'
     }
 
     // Amber badges
@@ -169,17 +177,25 @@ const handleEditSuccess = () => {
 
             <div class="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground">
                 <Button
-                    :variant="status === 'Scheduled' ? 'default' : 'ghost'"
+                    :variant="activeTab === 'Scheduled' ? 'default' : 'ghost'"
                     size="sm"
-                    @click="status = 'Scheduled'"
+                    @click="activeTab = 'Scheduled'"
                     class="rounded-sm px-3"
                 >
                     Scheduled
                 </Button>
                 <Button
-                    :variant="status === 'Completed' ? 'default' : 'ghost'"
+                    :variant="activeTab === 'Unscheduled' ? 'default' : 'ghost'"
                     size="sm"
-                    @click="status = 'Completed'"
+                    @click="activeTab = 'Unscheduled'"
+                    class="rounded-sm px-3"
+                >
+                    Unscheduled
+                </Button>
+                <Button
+                    :variant="activeTab === 'Completed' ? 'default' : 'ghost'"
+                    size="sm"
+                    @click="activeTab = 'Completed'"
                     class="rounded-sm px-3"
                 >
                     Completed
@@ -246,7 +262,7 @@ const handleEditSuccess = () => {
                                 </div>
                             </TableCell>
                             <TableCell>
-                                <Badge v-if="schedule.customer?.area_group_id">
+                                <Badge v-if="schedule.customer?.area_group_id" variant="outline">
                                     {{ schedule.customer.areaGroup?.area_name || 'N/A' }}
                                 </Badge>
                                 <span v-else class="text-muted-foreground text-sm">N/A</span>
@@ -255,10 +271,10 @@ const handleEditSuccess = () => {
                                 <Badge
                                     v-if="schedule.maintenance?.service_interval"
                                     :variant="
-                                        schedule.maintenance.service_interval === 'Monthly' ? 'blue' :
+                                        schedule.maintenance.service_interval === 'Monthly' ? 'outline-blue' :
                                         schedule.maintenance.service_interval === 'Quarterly' ? 'outline-purple' :
                                         schedule.maintenance.service_interval === '3X Per Year' ? 'outline-blue' :
-                                        schedule.maintenance.service_interval === 'Spring & Fall' ? 'green' :
+                                        schedule.maintenance.service_interval === 'Spring & Fall' ? 'outline-green' :
                                         schedule.maintenance.service_interval === 'Will Call' ? 'outline-amber' :
                                         'outline'
                                     "
