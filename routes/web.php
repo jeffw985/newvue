@@ -11,7 +11,37 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('dashboard', function () {
-    return Inertia::render('Dashboard');
+    // Turn On stats
+    $turnOnTotal = \App\Models\Irrigation::where('turn_on', true)->count();
+    $turnOnCompleted = \App\Models\Irrigation::where('turn_on', true)
+        ->whereNotNull('turn_on_date')->count();
+
+    // Backflow Testing stats
+    $backflowTotal = \App\Models\Irrigation::where('backflow_testing', true)->count();
+    $backflowCompleted = \App\Models\Irrigation::where('backflow_testing', true)
+        ->whereNotNull('backflow_test_date')->count();
+
+    // Blowout stats
+    $blowoutTotal = \App\Models\Irrigation::where('blowout', true)->count();
+    $blowoutCompleted = \App\Models\Irrigation::where('blowout', true)
+        ->whereNotNull('blowout_date')->count();
+
+    return Inertia::render('Dashboard', [
+        'irrigationStats' => [
+            'turnOn' => [
+                'total' => $turnOnTotal,
+                'completed' => $turnOnCompleted,
+            ],
+            'backflow' => [
+                'total' => $backflowTotal,
+                'completed' => $backflowCompleted,
+            ],
+            'blowout' => [
+                'total' => $blowoutTotal,
+                'completed' => $blowoutCompleted,
+            ],
+        ],
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function () {

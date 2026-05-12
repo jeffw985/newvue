@@ -6,6 +6,26 @@ import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
 
 import PlaceholderPattern from '../components/PlaceholderPattern.vue';
+import IrrigationStatsWidget from '../components/IrrigationStatsWidget.vue';
+
+interface Props {
+    irrigationStats: {
+        turnOn: {
+            total: number
+            completed: number
+        }
+        backflow: {
+            total: number
+            completed: number
+        }
+        blowout: {
+            total: number
+            completed: number
+        }
+    }
+}
+
+defineProps<Props>()
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -36,7 +56,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                 <div
                     class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
                 >
-                    <PlaceholderPattern />
+                    <IrrigationStatsWidget :stats="irrigationStats" />
                 </div>
             </div>
             <div
