@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Head, router } from '@inertiajs/vue3'
-import { MoreVertical, Search, X, Pencil, Trash2 } from 'lucide-vue-next'
-import { ref, watch } from 'vue'
+import { MoreVertical, Search, X, Pencil, Trash2, Printer } from 'lucide-vue-next'
+import { computed, ref, watch } from 'vue'
 
 import IrrigationForm from '@/components/forms/IrrigationForm.vue'
 import { Badge } from '@/components/ui/badge'
@@ -193,6 +193,55 @@ const handleEditSuccess = () => {
     isEditDialogOpen.value = false
     editingIrrigation.value = null
 }
+
+const handlePrint = () => {
+    window.print()
+}
+
+const activeFilters = computed(() => {
+    const active = []
+
+    if (search.value) {
+        active.push({ label: 'Search', value: search.value })
+    }
+
+    if (resultFilter.value) {
+        const label = resultFilter.value === 'null' ? 'Not Tested' : resultFilter.value.charAt(0).toUpperCase() + resultFilter.value.slice(1)
+        active.push({ label: 'Result', value: label })
+    }
+
+    if (submittedFilter.value) {
+        const label = submittedFilter.value === 'null' ? 'None (Empty)' : submittedFilter.value
+        active.push({ label: 'Submitted', value: label })
+    }
+
+    if (billedFilter.value) {
+        const label = billedFilter.value === 'null' ? 'None (Empty)' : billedFilter.value
+        active.push({ label: 'Billed', value: label })
+    }
+
+    if (completeFilter.value) {
+        active.push({ label: 'Complete', value: completeFilter.value.charAt(0).toUpperCase() + completeFilter.value.slice(1) })
+    }
+
+    if (turnOnFilter.value) {
+        active.push({ label: 'Turn On', value: turnOnFilter.value.charAt(0).toUpperCase() + turnOnFilter.value.slice(1) })
+    }
+
+    if (backflowTestingFilter.value) {
+        active.push({ label: 'Backflow Testing', value: backflowTestingFilter.value.charAt(0).toUpperCase() + backflowTestingFilter.value.slice(1) })
+    }
+
+    if (blowoutFilter.value) {
+        active.push({ label: 'Blowout', value: blowoutFilter.value.charAt(0).toUpperCase() + blowoutFilter.value.slice(1) })
+    }
+
+    if (backflowTypeFilter.value) {
+        active.push({ label: 'Backflow Type', value: backflowTypeFilter.value })
+    }
+
+    return active
+})
 </script>
 
 <template>
@@ -202,10 +251,24 @@ const handleEditSuccess = () => {
         <div class="flex h-full flex-1 flex-col gap-4 p-4">
             <div class="flex items-center justify-between">
                 <h1 class="text-2xl font-bold">Irrigation Tracking</h1>
+                <Button variant="outline" @click="handlePrint" class="flex items-center gap-2">
+                    <Printer class="h-4 w-4" />
+                    Print
+                </Button>
             </div>
 
-            <div class="rounded-md border bg-card">
-                <div class="p-4 space-y-4">
+            <div class="rounded-md border bg-card print:border-none print:shadow-none">
+                <div v-if="activeFilters.length" class="hidden print:block p-4 border-b">
+                    <h2 class="text-sm font-semibold mb-2">Active Filters:</h2>
+                    <div class="flex flex-wrap gap-x-6 gap-y-2">
+                        <div v-for="filter in activeFilters" :key="filter.label" class="text-xs">
+                            <span class="font-medium text-muted-foreground">{{ filter.label }}:</span>
+                            <span class="ml-1">{{ filter.value }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 space-y-4 print:hidden">
                     <div class="relative">
                         <Search class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                         <Input
@@ -336,11 +399,11 @@ const handleEditSuccess = () => {
                             <TableHead>Turn On</TableHead>
                             <TableHead>Backflow Test</TableHead>
                             <TableHead>Result</TableHead>
-                            <TableHead class="w-[300px]">Readings</TableHead>
+                            <TableHead class="w-[300px] print:hidden">Readings</TableHead>
                             <TableHead class="w-[180px]">Submitted</TableHead>
                             <TableHead class="w-[180px]">Billed</TableHead>
                             <TableHead class="w-[80px]">Complete</TableHead>
-                            <TableHead class="w-[50px]"></TableHead>
+                            <TableHead class="w-[50px] print:hidden"></TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -380,7 +443,7 @@ const handleEditSuccess = () => {
                                     {{ irrigation.backflow_test_pass || 'N/A' }}
                                 </Badge>
                             </TableCell>
-                            <TableCell>
+                            <TableCell class="print:hidden">
                                 <div class="flex flex-col gap-1">
                                     <span
                                         v-if="irrigation.backflow_type"
@@ -418,7 +481,7 @@ const handleEditSuccess = () => {
                                     />
                                 </div>
                             </TableCell>
-                            <TableCell @click.stop>
+                            <TableCell @click.stop class="print:hidden">
                                 <DropdownMenu>
                                     <DropdownMenuTrigger as-child>
                                         <Button variant="ghost" size="icon">
@@ -471,3 +534,78 @@ const handleEditSuccess = () => {
         </Dialog>
     </AppLayout>
 </template>
+
+<style>
+@media print {
+    /* Hide layout elements */
+    aside,
+    header,
+    nav,
+    [role="navigation"],
+    [data-slot="sidebar"],
+    .print\:hidden {
+        display: none !important;
+    }
+
+    /* Reset background and padding for print */
+    body, #app {
+        background: white !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Container adjustments */
+    .flex-1 {
+        display: block !important;
+    }
+
+    main {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Title styling for print */
+    h1 {
+        margin-bottom: 10px !important;
+        font-size: 24pt !important;
+    }
+
+    h2 {
+        font-size: 14pt !important;
+        margin-top: 0 !important;
+    }
+
+    /* Table adjustments */
+    table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+    }
+
+    th, td {
+        border: 1px solid #ddd !important;
+        padding: 8px !important;
+        text-align: left !important;
+        font-size: 10pt !important;
+    }
+
+    th {
+        background-color: #f2f2f2 !important;
+        -webkit-print-color-adjust: exact;
+    }
+
+    /* Ensure badges show up correctly in print */
+    .inline-flex {
+        border: 1px solid #ccc !important;
+    }
+
+    /* Prevent rows from breaking across pages and handle potential cut-off */
+    tr {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    @page {
+        margin: 0.5in;
+    }
+}
+</style>
