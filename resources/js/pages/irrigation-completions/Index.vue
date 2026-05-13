@@ -606,6 +606,12 @@ const activeFilters = computed(() => {
 
     @page {
         margin: 0.5in;
+        size: auto;
+    }
+
+    /* Add some padding to the bottom of the last element to prevent cut-off */
+    .flex-1 {
+        padding-bottom: 50px !important;
     }
 }
 </style>
