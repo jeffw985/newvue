@@ -19,6 +19,7 @@ class ServiceScheduleController extends Controller
         $search = $request->input('search');
         $status = $request->input('status', 'Scheduled');
         $unscheduled = $request->boolean('unscheduled');
+        $serviceRequested = $request->input('service_requested');
 
         $schedules = ServiceSchedule::query()
             ->with(['customer:id,full_name,street', 'customer.areaGroup', 'maintenance'])
@@ -35,6 +36,14 @@ class ServiceScheduleController extends Controller
                     })->orWhereRaw('LOWER(site_address) LIKE ?', ["%$searchTerm%"]);
                 });
             })
+            ->when($serviceRequested, function ($query, $serviceRequested) {
+                $services = is_array($serviceRequested) ? $serviceRequested : explode(',', $serviceRequested);
+                $query->where(function ($q) use ($services) {
+                    foreach ($services as $service) {
+                        $q->orWhereJsonContains('service_requested', trim($service));
+                    }
+                });
+            })
             ->orderBy('start_time', $status === 'Completed' ? 'desc' : 'asc')
             ->get();
 
@@ -43,6 +52,7 @@ class ServiceScheduleController extends Controller
             'search' => $search,
             'status' => $status,
             'unscheduled' => $unscheduled,
+            'service_requested' => $serviceRequested,
         ]);
     }
 

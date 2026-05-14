@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Head, router } from '@inertiajs/vue3'
-import { MoreVertical, Search, X, Pencil, Trash2 } from 'lucide-vue-next'
-import { ref, watch } from 'vue'
+import { MoreVertical, Search, X, Pencil, Trash2, Printer } from 'lucide-vue-next'
+import { computed, ref, watch } from 'vue'
 
 import ServiceScheduleForm from '@/components/forms/ServiceScheduleForm.vue'
 import { Badge } from '@/components/ui/badge'
@@ -38,6 +38,7 @@ const props = defineProps<{
     search?: string
     status?: string
     unscheduled?: boolean
+    service_requested?: string | string[]
 }>()
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -53,18 +54,26 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const search = ref(props.search || '')
 const activeTab = ref(props.unscheduled ? 'Unscheduled' : props.status || 'Scheduled')
+const serviceRequestedFilter = ref<string[]>(
+    Array.isArray(props.service_requested)
+        ? props.service_requested
+        : props.service_requested
+            ? props.service_requested.split(',')
+            : []
+)
 const isEditDialogOpen = ref(false)
 const editingSchedule = ref<ServiceSchedule | null>(null)
 
 let searchTimeout: ReturnType<typeof setTimeout> | null = null
 
 const applySearch = () => {
-    const params: Record<string, string | boolean | undefined> = {
+    const params: Record<string, string | boolean | string[] | undefined> = {
         search: search.value || undefined,
     }
 
     if (activeTab.value === 'Unscheduled') {
         params.unscheduled = true
+        params.service_requested = serviceRequestedFilter.value.length > 0 ? serviceRequestedFilter.value : undefined
     } else {
         params.status = activeTab.value
     }
@@ -88,6 +97,10 @@ watch(search, () => {
 watch(activeTab, () => {
     applySearch()
 })
+
+watch(serviceRequestedFilter, () => {
+    applySearch()
+}, { deep: true })
 
 const clearSearch = () => {
     search.value = ''
@@ -164,6 +177,24 @@ const handleEditSuccess = () => {
     isEditDialogOpen.value = false
     editingSchedule.value = null
 }
+
+const handlePrint = () => {
+    window.print()
+}
+
+const activeFilters = computed(() => {
+    const active = []
+
+    if (search.value) {
+        active.push({ label: 'Search', value: search.value })
+    }
+
+    if (activeTab.value === 'Unscheduled' && serviceRequestedFilter.value.length > 0) {
+        active.push({ label: 'Services Requested', value: serviceRequestedFilter.value.join(', ') })
+    }
+
+    return active
+})
 </script>
 
 <template>
@@ -173,9 +204,18 @@ const handleEditSuccess = () => {
         <div class="flex h-full flex-1 flex-col gap-4 p-4">
             <div class="flex items-center justify-between">
                 <h1 class="text-2xl font-bold">Service Schedule</h1>
+                <Button
+                    v-if="activeTab === 'Unscheduled'"
+                    variant="outline"
+                    @click="handlePrint"
+                    class="flex items-center gap-2 print:hidden"
+                >
+                    <Printer class="h-4 w-4" />
+                    Print
+                </Button>
             </div>
 
-            <div class="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground">
+            <div class="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground print:hidden">
                 <Button
                     :variant="activeTab === 'Scheduled' ? 'default' : 'ghost'"
                     size="sm"
@@ -202,8 +242,18 @@ const handleEditSuccess = () => {
                 </Button>
             </div>
 
-            <div class="rounded-md border bg-card">
-                <div class="p-4">
+            <div class="rounded-md border bg-card print:border-none print:shadow-none">
+                <div v-if="activeFilters.length" class="hidden print:block p-4 border-b">
+                    <h2 class="text-sm font-semibold mb-2">Active Filters:</h2>
+                    <div class="flex flex-wrap gap-x-6 gap-y-2">
+                        <div v-for="filter in activeFilters" :key="filter.label" class="text-xs">
+                            <span class="font-medium text-muted-foreground">{{ filter.label }}:</span>
+                            <span class="ml-1">{{ filter.value }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 space-y-4 print:hidden">
                     <div class="relative">
                         <Search class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                         <Input
@@ -221,22 +271,46 @@ const handleEditSuccess = () => {
                             <X class="h-4 w-4" />
                         </button>
                     </div>
+
+                    <div v-if="activeTab === 'Unscheduled'" class="flex flex-col gap-2">
+                        <label class="text-sm font-medium">Services Requested:</label>
+                        <select
+                            v-model="serviceRequestedFilter"
+                            multiple
+                            class="border border-border rounded-md px-3 py-2 text-sm bg-background min-h-[120px]"
+                        >
+                            <option value="Maintenance">Maintenance</option>
+                            <option value="Mulch">Mulch</option>
+                            <option value="Fall Cleanup">Fall Cleanup</option>
+                            <option value="Plant Replacement">Plant Replacement</option>
+                            <option value="Irrigation Blowout">Irrigation Blowout</option>
+                            <option value="Backflow">Backflow</option>
+                            <option value="Spring Start-Up">Spring Start-Up</option>
+                            <option value="Irrigation Service">Irrigation Service</option>
+                            <option value="Small Job / Repair">Small Job / Repair</option>
+                            <option value="Other - See Notes">Other - See Notes</option>
+                        </select>
+                        <span class="text-xs text-muted-foreground">
+                            Hold Ctrl/Cmd to select multiple services
+                        </span>
+                    </div>
                 </div>
 
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead class="w-[140px]">Start Time</TableHead>
+                            <TableHead class="w-[140px] print:hidden">Start Time</TableHead>
                             <TableHead>Customer</TableHead>
                             <TableHead class="w-[120px]">Area Group</TableHead>
                             <TableHead class="w-[140px]">Service Interval</TableHead>
+                            <TableHead class="w-[270px]">Service Notes</TableHead>
                             <TableHead class="w-[200px]">Services Requested</TableHead>
                             <TableHead class="w-[140px]">Crew Assigned</TableHead>
-                            <TableHead class="w-[50px]"></TableHead>
+                            <TableHead class="w-[50px] print:hidden"></TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        <TableEmpty v-if="!schedules.length" :colspan="7">
+                        <TableEmpty v-if="!schedules.length" :colspan="8">
                             No service schedules found.
                         </TableEmpty>
                         <TableRow
@@ -245,7 +319,7 @@ const handleEditSuccess = () => {
                             class="cursor-pointer"
                             @click="handleRowClick(schedule)"
                         >
-                            <TableCell>
+                            <TableCell class="print:hidden">
                                 {{ formatDateTime(schedule.start_time) }}
                             </TableCell>
                             <TableCell>
@@ -284,6 +358,12 @@ const handleEditSuccess = () => {
                                 <span v-else class="text-muted-foreground text-sm">N/A</span>
                             </TableCell>
                             <TableCell>
+                                <div v-if="schedule.service_notes" class="text-xs break-words whitespace-normal line-clamp-5">
+                                    {{ schedule.service_notes }}
+                                </div>
+                                <span v-else class="text-muted-foreground text-xs">N/A</span>
+                            </TableCell>
+                            <TableCell>
                                 <div class="flex flex-col gap-1 items-center">
                                     <div class="flex flex-wrap gap-1 justify-center">
                                         <Badge
@@ -294,9 +374,6 @@ const handleEditSuccess = () => {
                                         >
                                             {{ service }}
                                         </Badge>
-                                    </div>
-                                    <div v-if="schedule.service_notes" class="text-amber-600 font-bold text-xs text-center">
-                                        See Notes
                                     </div>
                                 </div>
                             </TableCell>
@@ -311,7 +388,7 @@ const handleEditSuccess = () => {
                                     </span>
                                 </div>
                             </TableCell>
-                            <TableCell @click.stop>
+                            <TableCell @click.stop class="print:hidden">
                                 <DropdownMenu>
                                     <DropdownMenuTrigger as-child>
                                         <Button variant="ghost" size="icon">
@@ -364,3 +441,84 @@ const handleEditSuccess = () => {
         </Dialog>
     </AppLayout>
 </template>
+
+<style>
+@media print {
+    /* Hide layout elements */
+    aside,
+    header,
+    nav,
+    [role="navigation"],
+    [data-slot="sidebar"],
+    .print\:hidden {
+        display: none !important;
+    }
+
+    /* Reset background and padding for print */
+    body, #app {
+        background: white !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Container adjustments */
+    .flex-1 {
+        display: block !important;
+    }
+
+    main {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Title styling for print */
+    h1 {
+        margin-bottom: 10px !important;
+        font-size: 24pt !important;
+    }
+
+    h2 {
+        font-size: 14pt !important;
+        margin-top: 0 !important;
+    }
+
+    /* Table adjustments */
+    table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+    }
+
+    th, td {
+        border: 1px solid #ddd !important;
+        padding: 8px !important;
+        text-align: left !important;
+        font-size: 10pt !important;
+    }
+
+    th {
+        background-color: #f2f2f2 !important;
+        -webkit-print-color-adjust: exact;
+    }
+
+    /* Ensure badges show up correctly in print */
+    .inline-flex {
+        border: 1px solid #ccc !important;
+    }
+
+    /* Prevent rows from breaking across pages and handle potential cut-off */
+    tr {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    @page {
+        margin: 0.5in;
+        size: auto;
+    }
+
+    /* Add some padding to the bottom of the last element to prevent cut-off */
+    .flex-1 {
+        padding-bottom: 50px !important;
+    }
+}
+</style>
